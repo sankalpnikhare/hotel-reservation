@@ -20,9 +20,12 @@ const app = express();
 app.use(session({
     secret: 'mysecretkey',
     resave: false,
-    saveUninitialized: true
+    saveUninitialized: false, // 🔥 change this
+    cookie: {
+        maxAge: 1000 * 60 * 60, // 1 hour
+        httpOnly: true
+    }
 }));
-
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
@@ -125,9 +128,7 @@ app.post('/login', async (req, res) => {
         name: user.name,
         email: user.email
     };
-    console.log("Entered password:", password);
-    console.log("User object:", user);
-    console.log("Stored password:", user?.password);
+    
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
 
     req.session.token = token;
@@ -138,9 +139,25 @@ app.post('/login', async (req, res) => {
 
 app.get('/homepage', authtoken, (req, res) => {
     res.render('homepage');
+    console.log("Session:" , req.session);
+    
 });
 
+app.post('/search' , (req,res)=>{
+    console.log(req.body);
+    res.render('search')
+    
+})
 
+
+
+app.get('/hotel' ,authtoken  ,  (req,res)=>{
+    res.render('hotel')
+})
+
+app.post('/hotel' , (req,res)=>{
+
+})
 app.listen(5000, () => {
     console.log(`Server listening at port 5000`);
 });

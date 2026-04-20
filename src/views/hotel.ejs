@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Add Hotel — StayEase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            background: url('/images/hotel-bg.png') center/cover no-repeat fixed;
+            position: relative;
+            padding: 20px;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: inherit;
+            filter: blur(10px);
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.55);
+            z-index: -1;
+        }
+
+        .form-container {
+            background: #fff;
+            padding: 40px;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+        }
+
+        h1 {
+            color: #1a1a1a;
+            font-size: 1.8rem;
+            font-weight: 600;
+            margin-bottom: 8px;
+            text-align: center;
+        }
+
+        p.subtitle {
+            color: #666;
+            font-size: 0.9rem;
+            margin-bottom: 32px;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 24px;
+        }
+
+        .label-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+            color: #333;
+            font-weight: 500;
+            font-size: 0.9rem;
+        }
+
+        .label-wrapper .material-icons-outlined {
+            font-size: 18px;
+            color: #006ce4;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 0.95rem;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        .input-field:focus {
+            border-color: #006ce4;
+        }
+
+        /* Stepper Styling */
+        .stepper {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: #f9f9f9;
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: 1px solid #ddd;
+            width: max-content;
+        }
+
+        .stepper-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 1.5px solid #006ce4;
+            background: transparent;
+            color: #006ce4;
+            font-size: 1.2rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            line-height: 1;
+        }
+
+        .stepper-btn:hover {
+            background: #006ce4;
+            color: #fff;
+        }
+
+        .stepper-value {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #1a1a1a;
+            min-width: 20px;
+            text-align: center;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #006ce4;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-family: inherit;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+            margin-top: 8px;
+        }
+
+        .btn-submit:hover {
+            background: #0057b8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="form-container">
+        <h1>Hotel Details</h1>
+        <p class="subtitle">Please enter your hotel information below</p>
+
+        <form action="/hotel" method="POST">
+            <!-- Hotel Name -->
+            <div class="form-group">
+                <div class="label-wrapper">
+                    <span class="material-icons-outlined">hotel</span>
+                    <label for="hotelName">Hotel Name</label>
+                </div>
+                <input type="text" id="hotelName" name="hotelName" class="input-field" placeholder="e.g. Grand Hyatt"
+                    required />
+            </div>
+
+            <!-- Hotel Location -->
+            <div class="form-group">
+                <div class="label-wrapper">
+                    <span class="material-icons-outlined">location_on</span>
+                    <label for="location">Hotel Location</label>
+                </div>
+                <input type="text" id="location" name="location" class="input-field" placeholder="e.g. New York, USA"
+                    required />
+            </div>
+
+            <!-- Total Rooms -->
+            <div class="form-group">
+                <div class="label-wrapper">
+                    <span class="material-icons-outlined">meeting_room</span>
+                    <label>Total Rooms</label>
+                </div>
+                <div class="stepper">
+                    <button type="button" class="stepper-btn" id="rooms-minus">−</button>
+                    <span class="stepper-value" id="rooms-value">1</span>
+                    <button type="button" class="stepper-btn" id="rooms-plus">+</button>
+                </div>
+                <input type="hidden" name="totalRooms" id="rooms-input" value="1" />
+            </div>
+
+            <button type="submit" class="btn-submit">Add Hotel</button>
+        </form>
+    </div>
+
+    <script>
+        const roomsValue = document.getElementById('rooms-value');
+        const roomsInput = document.getElementById('rooms-input');
+
+        function updateRooms(delta) {
+            let val = parseInt(roomsInput.value) + delta;
+            val = Math.max(1, Math.min(500, val)); // Max 500 rooms for example
+            roomsInput.value = val;
+            roomsValue.textContent = val;
+        }
+
+        document.getElementById('rooms-minus').addEventListener('click', () => updateRooms(-1));
+        document.getElementById('rooms-plus').addEventListener('click', () => updateRooms(1));
+    </script>
+</body>
+
+</html>

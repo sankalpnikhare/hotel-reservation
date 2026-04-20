@@ -218,7 +218,7 @@
 <body>
     <h1>StayEase</h1>
 
-    <form class="search-bar" action="/search" method="GET">
+    <form class="search-bar" action="/search" method="POST">
         <!-- Destination -->
         <div class="search-field">
             <span class="material-icons-outlined">hotel</span>
@@ -235,18 +235,29 @@
             </div>
         </div>
 
-        <!-- Guests -->
+        <!-- Adults -->
         <div class="search-field">
             <span class="material-icons-outlined">person_outline</span>
-            <select name="guests">
-                <option>2 adults · 0 children · 1 room</option>
-                <option>1 adult · 0 children · 1 room</option>
-                <option>2 adults · 1 child · 1 room</option>
-                <option>2 adults · 2 children · 1 room</option>
-                <option>3 adults · 0 children · 1 room</option>
-                <option>2 adults · 0 children · 2 rooms</option>
-            </select>
+            <div class="room-stepper">
+                <button type="button" class="stepper-btn" id="adults-minus">−</button>
+                <span class="stepper-value" id="adults-value">2</span>
+                <button type="button" class="stepper-btn" id="adults-plus">+</button>
+                <span class="stepper-label">Adults</span>
+            </div>
+            <input type="hidden" name="adults" id="adults-input" value="2" />
         </div>
+
+        <!-- Children -->
+        <!-- <div class="search-field">
+            <span class="material-icons-outlined">child_care</span>
+            <div class="room-stepper">
+                <button type="button" class="stepper-btn" id="children-minus">−</button>
+                <span class="stepper-value" id="children-value">0</span>
+                <button type="button" class="stepper-btn" id="children-plus">+</button>
+                <span class="stepper-label">Children</span>
+            </div>
+            <input type="hidden" name="children" id="children-input" value="0" />
+        </div> -->
 
         <!-- Rooms -->
         <div class="search-field">
@@ -255,7 +266,7 @@
                 <button type="button" class="stepper-btn" id="rooms-minus">−</button>
                 <span class="stepper-value" id="rooms-value">1</span>
                 <button type="button" class="stepper-btn" id="rooms-plus">+</button>
-                <span class="stepper-label">Room</span>
+                <span class="stepper-label">Rooms</span>
             </div>
             <input type="hidden" name="rooms" id="rooms-input" value="1" />
         </div>
@@ -264,20 +275,24 @@
         <button type="submit" class="btn-search">Search</button>
     </form>
     <script>
-        const roomsValue = document.getElementById('rooms-value');
-        const roomsInput = document.getElementById('rooms-input');
-        const roomsLabel = document.querySelector('.stepper-label');
-
-        function updateRooms(delta) {
-            let val = parseInt(roomsInput.value) + delta;
-            val = Math.max(1, Math.min(10, val));
-            roomsInput.value = val;
-            roomsValue.textContent = val;
-            roomsLabel.textContent = val === 1 ? 'Room' : 'Rooms';
+        function setupStepper(id, min, max) {
+            const value = document.getElementById(id + '-value');
+            const input = document.getElementById(id + '-input');
+            document.getElementById(id + '-minus').addEventListener('click', () => {
+                let v = Math.max(min, parseInt(input.value) - 1);
+                input.value = v;
+                value.textContent = v;
+            });
+            document.getElementById(id + '-plus').addEventListener('click', () => {
+                let v = Math.min(max, parseInt(input.value) + 1);
+                input.value = v;
+                value.textContent = v;
+            });
         }
 
-        document.getElementById('rooms-minus').addEventListener('click', () => updateRooms(-1));
-        document.getElementById('rooms-plus').addEventListener('click', () => updateRooms(1));
+        setupStepper('adults', 1, 10);
+        setupStepper('children', 0, 10);
+        setupStepper('rooms', 1, 10);
     </script>
 </body>
 
