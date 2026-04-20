@@ -4,8 +4,9 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Home</title>
+    <title>StayEase — Find Your Stay</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
     <style>
         * {
             margin: 0;
@@ -16,6 +17,7 @@
         body {
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
             font-family: 'Inter', sans-serif;
@@ -42,15 +44,241 @@
 
         h1 {
             color: #fff;
-            font-size: 2.4rem;
+            font-size: 2.2rem;
             font-weight: 600;
             letter-spacing: -0.5px;
+            margin-bottom: 28px;
+        }
+
+        /* ── Search Bar ── */
+        .search-bar {
+            display: flex;
+            align-items: stretch;
+            background: #fff;
+            border-radius: 8px;
+            border: 3px solid #f5a623;
+            overflow: hidden;
+            width: 100%;
+            max-width: 960px;
+            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+        }
+
+        .search-field {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 0 18px;
+            flex: 1;
+            border-right: 1px solid #e0e0e0;
+            min-height: 52px;
+        }
+
+        .search-field:last-of-type {
+            border-right: none;
+        }
+
+        .search-field .material-icons-outlined {
+            font-size: 20px;
+            color: #333;
+            flex-shrink: 0;
+        }
+
+        .search-field input,
+        .search-field select {
+            border: none;
+            outline: none;
+            font-family: inherit;
+            font-size: 0.85rem;
+            color: #1a1a1a;
+            background: transparent;
+            width: 100%;
+        }
+
+        .search-field input::placeholder {
+            color: #888;
+        }
+
+        .search-field select {
+            cursor: pointer;
+            -webkit-appearance: none;
+            appearance: none;
+            color: #555;
+        }
+
+        /* Date pair */
+        .date-pair {
+            display: flex;
+            align-items: center;
+            gap: 0;
+            width: 100%;
+        }
+
+        .date-pair input {
+            width: 50%;
+            text-align: center;
+        }
+
+        .date-pair span {
+            color: #bbb;
+            font-size: 0.85rem;
+            padding: 0 4px;
+        }
+
+        /* Rooms stepper */
+        .room-stepper {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .room-stepper .stepper-btn {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            border: 1.5px solid #006ce4;
+            background: transparent;
+            color: #006ce4;
+            font-size: 1.1rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s;
+            flex-shrink: 0;
+            line-height: 1;
+        }
+
+        .room-stepper .stepper-btn:hover {
+            background: #006ce4;
+            color: #fff;
+        }
+
+        .room-stepper .stepper-value {
+            font-size: 0.88rem;
+            font-weight: 500;
+            color: #1a1a1a;
+            min-width: 14px;
+            text-align: center;
+        }
+
+        .room-stepper .stepper-label {
+            font-size: 0.82rem;
+            color: #555;
+            white-space: nowrap;
+        }
+
+        /* Search button */
+        .btn-search {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 28px;
+            background: #006ce4;
+            color: #fff;
+            border: none;
+            font-family: inherit;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
+            transition: background 0.2s;
+        }
+
+        .btn-search:hover {
+            background: #0057b8;
+        }
+
+        /* Mobile */
+        @media (max-width: 768px) {
+            .search-bar {
+                flex-direction: column;
+                max-width: 400px;
+                border-radius: 10px;
+            }
+
+            .search-field {
+                border-right: none;
+                border-bottom: 1px solid #e0e0e0;
+            }
+
+            .search-field:last-of-type {
+                border-bottom: none;
+            }
+
+            .btn-search {
+                padding: 14px;
+                border-radius: 0 0 7px 7px;
+            }
         }
     </style>
 </head>
 
 <body>
-    <h1>Welcome to StayEase</h1>
+    <h1>StayEase</h1>
+
+    <form class="search-bar" action="/search" method="GET">
+        <!-- Destination -->
+        <div class="search-field">
+            <span class="material-icons-outlined">hotel</span>
+            <input type="text" name="destination" placeholder="Where are you going?" required />
+        </div>
+
+        <!-- Dates -->
+        <div class="search-field">
+            <span class="material-icons-outlined">calendar_today</span>
+            <div class="date-pair">
+                <input type="date" name="checkin" required />
+                <span>—</span>
+                <input type="date" name="checkout" required />
+            </div>
+        </div>
+
+        <!-- Guests -->
+        <div class="search-field">
+            <span class="material-icons-outlined">person_outline</span>
+            <select name="guests">
+                <option>2 adults · 0 children · 1 room</option>
+                <option>1 adult · 0 children · 1 room</option>
+                <option>2 adults · 1 child · 1 room</option>
+                <option>2 adults · 2 children · 1 room</option>
+                <option>3 adults · 0 children · 1 room</option>
+                <option>2 adults · 0 children · 2 rooms</option>
+            </select>
+        </div>
+
+        <!-- Rooms -->
+        <div class="search-field">
+            <span class="material-icons-outlined">meeting_room</span>
+            <div class="room-stepper">
+                <button type="button" class="stepper-btn" id="rooms-minus">−</button>
+                <span class="stepper-value" id="rooms-value">1</span>
+                <button type="button" class="stepper-btn" id="rooms-plus">+</button>
+                <span class="stepper-label">Room</span>
+            </div>
+            <input type="hidden" name="rooms" id="rooms-input" value="1" />
+        </div>
+
+        <!-- Search button -->
+        <button type="submit" class="btn-search">Search</button>
+    </form>
+    <script>
+        const roomsValue = document.getElementById('rooms-value');
+        const roomsInput = document.getElementById('rooms-input');
+        const roomsLabel = document.querySelector('.stepper-label');
+
+        function updateRooms(delta) {
+            let val = parseInt(roomsInput.value) + delta;
+            val = Math.max(1, Math.min(10, val));
+            roomsInput.value = val;
+            roomsValue.textContent = val;
+            roomsLabel.textContent = val === 1 ? 'Room' : 'Rooms';
+        }
+
+        document.getElementById('rooms-minus').addEventListener('click', () => updateRooms(-1));
+        document.getElementById('rooms-plus').addEventListener('click', () => updateRooms(1));
+    </script>
 </body>
 
 </html>

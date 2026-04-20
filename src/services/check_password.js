@@ -6,10 +6,7 @@ const usermodel = require('../db/model/usermodel');
 
 async function check_password(password , userpassword){
     
-    const check = bcrypt.compare(password , userpassword  );
-    if(check){
-        return true 
-    }
-    return false ;
+    const check =await bcrypt.compare(password , userpassword  );
+    return check ; 
 }
 module.exports = check_password ; 
