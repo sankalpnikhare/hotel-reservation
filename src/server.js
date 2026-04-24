@@ -174,7 +174,7 @@ app.post('/login', async (req, res) => {
 });
 
 
-app.get('/homepage', authtoken, (req, res) => {
+app.get('/homepage', (req, res) => {
     res.render('homepage');
 
 
@@ -308,6 +308,8 @@ app.post('/reserve', async (req, res) => {
 
 
     const owneremail = owner[0].email;
+    console.log(owneremail);
+    
 
     //got the owner email !
 

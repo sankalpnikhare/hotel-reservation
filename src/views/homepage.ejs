@@ -5,9 +5,19 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StayEase — Find Your Stay</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
     <style>
+        :root {
+            --primary-blue: #003580;
+            --secondary-blue: #006ce4;
+            --accent-yellow: #febb02;
+            --light-bg: #f5f5f5;
+            --text-main: #1a1a1a;
+            --text-muted: #4d4d4d;
+        }
+
         * {
             margin: 0;
             padding: 0;
@@ -15,314 +25,492 @@
         }
 
         body {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             font-family: 'Inter', sans-serif;
-            background: url('/images/hotel-bg.png') center/cover no-repeat fixed;
-            position: relative;
+            background-color: #fff;
+            color: var(--text-main);
+            line-height: 1.5;
         }
 
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: inherit;
-            filter: blur(10px);
-            z-index: -2;
-        }
-
-        body::after {
-            content: '';
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.55);
-            z-index: -1;
-        }
-
-        h1 {
+        /* ── Header & Navbar ── */
+        .header {
+            background-color: var(--primary-blue);
+            padding: 12px 20px 48px;
             color: #fff;
-            font-size: 2.2rem;
+        }
+
+        .navbar {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .nav-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .nav-link {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .btn-nav {
+            padding: 8px 16px;
+            border-radius: 2px;
+            background: #fff;
+            color: var(--secondary-blue);
+            text-decoration: none;
             font-weight: 600;
-            letter-spacing: -0.5px;
-            margin-bottom: 28px;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+
+        .btn-nav:hover {
+            background: #f0f0f0;
+        }
+
+        .header-content {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .header-content h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .header-content p {
+            font-size: 24px;
+            font-weight: 400;
+            margin-bottom: 32px;
+            opacity: 0.9;
         }
 
         /* ── Search Bar ── */
+        .search-container {
+            max-width: 1100px;
+            margin: -32px auto 0;
+            padding: 0 20px;
+        }
+
         .search-bar {
             display: flex;
-            align-items: stretch;
-            background: #fff;
+            background: var(--accent-yellow);
+            padding: 4px;
             border-radius: 8px;
-            border: 3px solid #f5a623;
-            overflow: hidden;
-            width: 100%;
-            max-width: 1000px;
-            box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
+            gap: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
 
         .search-field {
+            background: #fff;
+            height: 52px;
             display: flex;
             align-items: center;
-            gap: 8px;
             padding: 0 12px;
-            flex: 1.5;
-            border-right: 1px solid #e0e0e0;
-            min-height: 48px;
+            gap: 8px;
+            flex: 1;
         }
 
         .search-field:first-child {
-            flex: 2;
-            min-width: 240px;
+            border-top-left-radius: 4px;
+            border-bottom-left-radius: 4px;
+            flex: 1.5;
         }
 
-        .search-field:nth-child(3),
-        .search-field:nth-child(4) {
-            flex: 1;
-            max-width: 200px;
-        }
-
-        .search-field:last-of-type {
-            border-right: none;
-
+        .search-field:nth-child(2) {
+            flex: 1.2;
         }
 
         .search-field .material-icons-outlined {
-            font-size: 20px;
-            color: #333;
-            flex-shrink: 0;
-        }
-
-        .search-field input {
-            width: 100%;
-        }
-
-        .search-field select {
-            width: 100%;
+            color: #4d4d4d;
+            font-size: 24px;
         }
 
         .search-field input,
-        .search-field select {
+        .search-field select,
+        .guest-trigger {
             border: none;
             outline: none;
-            font-family: inherit;
-            font-size: 0.85rem;
-            color: #1a1a1a;
-            background: transparent;
-        }
-
-        .search-field input::placeholder {
-            color: #888;
-        }
-
-        .search-field select {
-            cursor: pointer;
-            -webkit-appearance: none;
-            appearance: none;
-            color: #555;
-        }
-
-        /* Date pair */
-        .date-pair {
-            display: flex;
-            align-items: center;
-            gap: 0;
             width: 100%;
+            font-family: inherit;
+            font-size: 14px;
+            color: var(--text-main);
+            background: transparent;
+            cursor: pointer;
         }
 
-        .date-pair input {
-            width: 50%;
-            text-align: center;
-        }
-
-        .date-pair span {
-            color: #bbb;
-            font-size: 0.85rem;
-            padding: 0 2px;
-        }
-
-        /* Rooms stepper */
-        .room-stepper {
+        .date-inputs {
             display: flex;
             align-items: center;
+            width: 100%;
             gap: 4px;
         }
 
-        .room-stepper .stepper-btn {
-            width: 26px;
-            height: 26px;
-            border-radius: 50%;
-            border: 1.5px solid #006ce4;
-            background: transparent;
-            color: #006ce4;
-            font-size: 1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .date-inputs input[type="date"] {
+            flex: 1;
+            font-size: 13px;
+        }
+
+        .date-separator {
+            color: #ccc;
+            font-size: 14px;
+        }
+
+        .guest-trigger {
             cursor: pointer;
-            transition: all 0.15s;
-            flex-shrink: 0;
-            line-height: 1;
-        }
-
-        .room-stepper .stepper-btn:hover {
-            background: #006ce4;
-            color: #fff;
-        }
-
-        .room-stepper .stepper-value {
-            font-size: 0.88rem;
-            font-weight: 500;
-            color: #1a1a1a;
-            min-width: 14px;
-            text-align: center;
-        }
-
-        .room-stepper .stepper-label {
-            font-size: 0.82rem;
-            color: #555;
-            white-space: nowrap;
-        }
-
-        /* Search button */
-        .btn-search {
+            text-align: left;
             display: flex;
             align-items: center;
-            justify-content: center;
-            padding: 0 28px;
-            background: #006ce4;
+            justify-content: space-between;
+        }
+
+        .btn-search {
+            background: var(--secondary-blue);
             color: #fff;
             border: none;
-            font-family: inherit;
-            font-size: 0.9rem;
-            font-weight: 600;
+            padding: 0 32px;
+            font-size: 20px;
+            font-weight: 500;
+            border-radius: 4px;
             cursor: pointer;
-            letter-spacing: 0.3px;
-            white-space: nowrap;
             transition: background 0.2s;
         }
 
         .btn-search:hover {
-            background: #0057b8;
+            background: #0056b3;
+        }
+
+        /* ── Property Types Section ── */
+        .main-content {
+            max-width: 1100px;
+            margin: 60px auto;
+            padding: 0 20px;
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 24px;
+        }
+
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 16px;
+        }
+
+        .property-card {
+            border-radius: 8px;
+            overflow: hidden;
+            cursor: pointer;
+        }
+
+        .property-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 8px;
+        }
+
+        .property-card h3 {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .property-card p {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
+        /* ── Guest Dropdown (Simple Version) ── */
+        .guest-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-radius: 4px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            padding: 16px;
+            display: none;
+            z-index: 100;
+            margin-top: 8px;
+        }
+
+        .guest-field {
+            position: relative;
+        }
+
+        .guest-field.active .guest-dropdown {
+            display: block;
+        }
+
+        .stepper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .stepper:last-child {
+            margin-bottom: 0;
+        }
+
+        .stepper-controls {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stepper-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid var(--secondary-blue);
+            background: #fff;
+            color: var(--secondary-blue);
+            border-radius: 4px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .stepper-btn:disabled {
+            border-color: #ccc;
+            color: #ccc;
+            cursor: not-allowed;
         }
 
         /* Mobile */
         @media (max-width: 768px) {
+            .navbar {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+
+            .header-content h1 {
+                font-size: 32px;
+            }
+
+            .header-content p {
+                font-size: 18px;
+            }
+
             .search-bar {
                 flex-direction: column;
-                max-width: 400px;
-                border-radius: 10px;
             }
 
-            .search-field {
-                border-right: none;
-                border-bottom: 1px solid #e0e0e0;
-            }
-
-            .search-field:last-of-type {
-                border-bottom: none;
+            .search-field:first-child {
+                border-radius: 4px;
             }
 
             .btn-search {
-                padding: 14px;
-                border-radius: 0 0 7px 7px;
+                padding: 16px;
             }
         }
     </style>
 </head>
 
 <body>
-    <h1>StayEase</h1>
+    <header class="header">
+        <nav class="navbar">
+            <a href="/" class="logo">StayEase.com</a>
+            <div class="nav-actions">
+                <span class="nav-link">INR</span>
+                <span class="nav-link"><i class="material-icons-outlined"
+                        style="font-size: 20px; vertical-align: middle;">help_outline</i></span>
+                <a href="/add-hotel" class="nav-link">List your property</a>
+                <a href="/register" class="btn-nav">Register</a>
+                <a href="/login" class="btn-nav">Sign in</a>
+            </div>
+        </nav>
 
-    <form class="search-bar" action="/hotels" method="GET">
-        <!-- Destination -->
-        <div class="search-field">
-            <span class="material-icons-outlined">hotel</span>
-            <select name="location" required>
-                <option value="" disabled selected>Select Location</option>
-                <option value="Nagpur, India">Nagpur, India</option>
-                <option value="Gondia, India">Gondia, India</option>
-                <option value="Wardha, India">Wardha, India</option>
-                <option value="Mumbai, India">Mumbai, India</option>
-            </select>
+        <div class="header-content">
+            <h1>Find your next stay</h1>
+            <p>Search low prices on hotels, homes and much more...</p>
+        </div>
+    </header>
+
+    <main>
+        <div class="search-container">
+            <form class="search-bar" action="/hotels" method="GET" id="search-form">
+                <!-- Location -->
+                <div class="search-field">
+                    <span class="material-icons-outlined">bed</span>
+                    <select name="location" required>
+                        <option value="" disabled selected>Where are you going?</option>
+                        <option value="Nagpur, India">Nagpur, India</option>
+                        <option value="Gondia, India">Gondia, India</option>
+                        <option value="Wardha, India">Wardha, India</option>
+                        <option value="Mumbai, India">Mumbai, India</option>
+                    </select>
+                </div>
+
+                <!-- Dates -->
+                <div class="search-field">
+                    <span class="material-icons-outlined">calendar_today</span>
+                    <div class="date-inputs">
+                        <input type="date" name="checkin" required title="Check-in date">
+                        <span class="date-separator">—</span>
+                        <input type="date" name="checkout" required title="Check-out date">
+                    </div>
+                </div>
+
+                <!-- Guests -->
+                <div class="search-field guest-field" id="guest-field">
+                    <span class="material-icons-outlined">person</span>
+                    <div class="guest-trigger" id="guest-trigger">
+                        <span id="guest-text">2 adults · 1 room</span>
+                        <span class="material-icons-outlined">expand_more</span>
+                    </div>
+
+                    <div class="guest-dropdown">
+                        <div class="stepper">
+                            <span>Adults</span>
+                            <div class="stepper-controls">
+                                <button type="button" class="stepper-btn" id="adults-minus">−</button>
+                                <span id="adults-count">2</span>
+                                <button type="button" class="stepper-btn" id="adults-plus">+</button>
+                            </div>
+                        </div>
+                        <div class="stepper">
+                            <span>Rooms</span>
+                            <div class="stepper-controls">
+                                <button type="button" class="stepper-btn" id="rooms-minus">−</button>
+                                <span id="rooms-count">1</span>
+                                <button type="button" class="stepper-btn" id="rooms-plus">+</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <input type="hidden" name="adults" id="adults-input" value="2">
+                <input type="hidden" name="rooms" id="rooms-input" value="1">
+
+                <button type="submit" class="btn-search">Search</button>
+            </form>
         </div>
 
-        <!-- Dates -->
-        <div class="search-field">
-            <span class="material-icons-outlined">calendar_today</span>
-            <div class="date-pair">
-                <input type="date" name="checkin" required />
-                <span>—</span>
-                <input type="date" name="checkout" required />
+        <div class="main-content">
+            <h2 class="section-title">Browse by property type</h2>
+            <div class="property-grid">
+                <div class="property-card">
+                    <img src="https://cf.bstatic.com/xdata/images/xphoto/square300/57584488.webp?k=bf724e4f9b9b2bb4d21659e2d567545673468f697491321f7c0c57147a67104b&o="
+                        alt="Hotels">
+                    <h3>Hotels</h3>
+                    <p>801,429 hotels</p>
+                </div>
+                <div class="property-card">
+                    <img src="https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-apartments_300/9f60235dc09a3ac3f0a93adbc901c61ecd1ce72e.jpg"
+                        alt="Apartments">
+                    <h3>Apartments</h3>
+                    <p>801,429 apartments</p>
+                </div>
+                <div class="property-card">
+                    <img src="https://cf.bstatic.com/static/img/theme-index/carousel_320x240/bg_resorts/6f87c6143fbd51a0bb5d15ca3b9cf84211ab0884.jpg"
+                        alt="Resorts">
+                    <h3>Resorts</h3>
+                    <p>17,422 resorts</p>
+                </div>
+                <div class="property-card">
+                    <img src="https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-villas_300/dd0d7f8911051039b628d08463d90b5ff05104ed.jpg"
+                        alt="Villas">
+                    <h3>Villas</h3>
+                    <p>401,234 villas</p>
+                </div>
             </div>
         </div>
+    </main>
 
-        <!-- Adults -->
-        <div class="search-field">
-            <span class="material-icons-outlined">person_outline</span>
-            <div class="room-stepper">
-                <button type="button" class="stepper-btn" id="adults-minus">−</button>
-                <span class="stepper-value" id="adults-value">2</span>
-                <button type="button" class="stepper-btn" id="adults-plus">+</button>
-                <span class="stepper-label">Adults</span>
-            </div>
-            <input type="hidden" name="adults" id="adults-input" value="2" />
-        </div>
-
-        <!-- Children -->
-        <!-- <div class="search-field">
-            <span class="material-icons-outlined">child_care</span>
-            <div class="room-stepper">
-                <button type="button" class="stepper-btn" id="children-minus">−</button>
-                <span class="stepper-value" id="children-value">0</span>
-                <button type="button" class="stepper-btn" id="children-plus">+</button>
-                <span class="stepper-label">Children</span>
-            </div>
-            <input type="hidden" name="children" id="children-input" value="0" />
-        </div> -->
-
-        <!-- Rooms -->
-        <div class="search-field">
-            <span class="material-icons-outlined">meeting_room</span>
-            <div class="room-stepper">
-                <button type="button" class="stepper-btn" id="rooms-minus">−</button>
-                <span class="stepper-value" id="rooms-value">1</span>
-                <button type="button" class="stepper-btn" id="rooms-plus">+</button>
-                <span class="stepper-label">Rooms</span>
-            </div>
-            <input type="hidden" name="rooms" id="rooms-input" value="1" />
-        </div>
-
-        <!-- Search button -->
-        <button type="submit" class="btn-search">Search</button>
-    </form>
+    <!-- Basic Date Picker Integration (Optional, using native date for simplicity if preferred) -->
+    <!-- For now, I'll keep it simple with native inputs hidden behind the display -->
     <script>
-        function setupStepper(id, min, max) {
-            const value = document.getElementById(id + '-value');
+        // Guest Dropdown Logic
+        const guestField = document.getElementById('guest-field');
+        const guestTrigger = document.getElementById('guest-trigger');
+        const guestText = document.getElementById('guest-text');
+        const params = new URLSearchParams(window.location.search);
+
+    if (params.get('loginRequired')) {
+        alert("Please log in first");
+    }
+
+        guestTrigger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            guestField.classList.toggle('active');
+        });
+
+        document.addEventListener('click', () => {
+            guestField.classList.remove('active');
+        });
+
+        document.querySelector('.guest-dropdown').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        function setupStepper(id, min, max, onChange) {
+            const display = document.getElementById(id + '-count');
             const input = document.getElementById(id + '-input');
-            const btnMinus = document.getElementById(id + '-minus');
-            const btnPlus = document.getElementById(id + '-plus');
+            const minus = document.getElementById(id + '-minus');
+            const plus = document.getElementById(id + '-plus');
 
-            if (!value || !input || !btnMinus || !btnPlus) return;
-
-            btnMinus.addEventListener('click', () => {
-                let v = Math.max(min, parseInt(input.value) - 1);
-                input.value = v;
-                value.textContent = v;
+            minus.addEventListener('click', () => {
+                let val = parseInt(display.textContent);
+                if (val > min) {
+                    val--;
+                    display.textContent = val;
+                    input.value = val;
+                    onChange();
+                }
             });
-            btnPlus.addEventListener('click', () => {
-                let v = Math.min(max, parseInt(input.value) + 1);
-                input.value = v;
-                value.textContent = v;
+
+            plus.addEventListener('click', () => {
+                let val = parseInt(display.textContent);
+                if (val < max) {
+                    val++;
+                    display.textContent = val;
+                    input.value = val;
+                    onChange();
+                }
             });
         }
 
-        setupStepper('adults', 1, 10);
-        setupStepper('children', 0, 10);
-        setupStepper('rooms', 1, 10);
+        function updateGuestText() {
+            const adults = document.getElementById('adults-count').textContent;
+            const rooms = document.getElementById('rooms-count').textContent;
+            guestText.textContent = `${adults} adults · ${rooms} room${rooms > 1 ? 's' : ''}`;
+        }
+
+        setupStepper('adults', 1, 10, updateGuestText);
+        setupStepper('rooms', 1, 10, updateGuestText);
+
+        // Date selection logic: ensure checkout is after checkin
+        const checkinInput = document.querySelector('input[name="checkin"]');
+        const checkoutInput = document.querySelector('input[name="checkout"]');
+
+        checkinInput.addEventListener('change', () => {
+            if (checkinInput.value) {
+                checkoutInput.min = checkinInput.value;
+            }
+        });
     </script>
 </body>
 

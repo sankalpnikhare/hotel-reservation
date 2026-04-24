@@ -1,9 +1,69 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <title>Search</title>
-    </head>
-    <body>
-        <h1>Heading</h1>
-    </body>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Search — StayEase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <style>
+        :root {
+            --primary-blue: #003580;
+            --secondary-blue: #006ce4;
+            --text-main: #1a1a1a;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #fff;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .header {
+            background-color: var(--primary-blue);
+            padding: 16px 20px;
+            color: #fff;
+        }
+
+        .navbar {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar"><a href="/" class="logo">StayEase.com</a></nav>
+    </header>
+    <main class="main-container">
+        <h1>Search Properties</h1>
+    </main>
+</body>
+
 </html>
