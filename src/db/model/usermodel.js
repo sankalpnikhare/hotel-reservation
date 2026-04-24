@@ -12,7 +12,8 @@ const userschema = mongoose.Schema({
     email:{
         required:true,
         type:String
-    }
+    },
+    nanoid:String
 })
 
 const usermodel =new  mongoose.model('users',  userschema); 

@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+        <%= hotel.hotelName %> — StayEase
+    </title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #006ce4;
+            --primary-dark: #0057b8;
+            --accent: #f5a623;
+            --text-main: #1a1a1a;
+            --text-muted: #666;
+            --glass-bg: rgba(255, 255, 255, 0.95);
+            --glass-border: rgba(255, 255, 255, 0.3);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            font-family: 'Inter', sans-serif;
+            background: url('/images/hotel-bg.png') center/cover no-repeat fixed;
+            position: relative;
+            padding: 20px;
+            color: var(--text-main);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        body::before {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: inherit;
+            filter: blur(12px);
+            z-index: -2;
+        }
+
+        body::after {
+            content: '';
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.4);
+            z-index: -1;
+        }
+
+        /* ── Header ── */
+        header {
+            width: 100%;
+            max-width: 1100px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 0;
+            margin-bottom: 20px;
+            color: #fff;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .nav-links a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: opacity 0.2s;
+        }
+
+        .nav-links a:hover {
+            opacity: 0.8;
+        }
+
+        /* ── Main Layout ── */
+        .container {
+            width: 100%;
+            max-width: 1100px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.25);
+            border: 1px solid var(--glass-border);
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ── Photo Gallery ── */
+        .gallery {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            grid-template-rows: 250px 250px;
+            gap: 12px;
+            padding: 24px;
+            background: #fff;
+        }
+
+        .gallery-main {
+            grid-row: span 2;
+            border-radius: 16px;
+            overflow: hidden;
+        }
+
+        .gallery-item {
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .gallery img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.4s ease;
+        }
+
+        .gallery img:hover {
+            transform: scale(1.03);
+        }
+
+        /* ── Content Section ── */
+        .content {
+            padding: 40px;
+            display: grid;
+            grid-template-columns: 1fr 350px;
+            gap: 40px;
+        }
+
+        .hotel-header {
+            margin-bottom: 24px;
+        }
+
+        .hotel-name {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+            letter-spacing: -0.5px;
+        }
+
+        .hotel-location {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 1.1rem;
+        }
+
+        .location-icon {
+            color: var(--primary);
+        }
+
+        .description {
+            line-height: 1.7;
+            color: #444;
+            margin-bottom: 30px;
+            font-size: 1.05rem;
+        }
+
+        .amenities {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 16px;
+            margin-top: 20px;
+        }
+
+        .amenity-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+            color: #555;
+        }
+
+        /* ── Booking Card ── */
+        .booking-card {
+            background: #fff;
+            border-radius: 20px;
+            padding: 28px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+            border: 1px solid #eee;
+            align-self: start;
+            position: sticky;
+            top: 20px;
+        }
+
+        .price-section {
+            margin-bottom: 20px;
+        }
+
+        .price-label {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+            margin-bottom: 4px;
+        }
+
+        .price-tag {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .price-tag span {
+            font-size: 1rem;
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        .booking-info {
+            background: #f8fbff;
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            border: 1px solid #eef4ff;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            font-size: 0.9rem;
+        }
+
+        .info-row:not(:last-child) {
+            border-bottom: 1px solid #eef4ff;
+        }
+
+        .info-label {
+            color: var(--text-muted);
+        }
+
+        .info-value {
+            font-weight: 600;
+        }
+
+        .btn-reserve {
+            width: 100%;
+            padding: 16px;
+            background: var(--primary);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+        }
+
+        .btn-reserve:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 108, 228, 0.25);
+        }
+
+        .guarantee {
+            text-align: center;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        /* ── Mobile ── */
+        @media (max-width: 900px) {
+            .content {
+                grid-template-columns: 1fr;
+            }
+
+            .gallery {
+                grid-template-columns: 1fr;
+                grid-template-rows: 300px repeat(3, 150px);
+            }
+
+            .gallery-main {
+                grid-row: span 1;
+            }
+
+            .hotel-name {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <a href="/homepage" class="logo">StayEase</a>
+        <div class="nav-links">
+            <a href="javascript:history.back()">
+                <span class="material-icons-outlined">arrow_back</span>
+                Back to results
+            </a>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Photo Gallery -->
+        <div class="gallery">
+            <div class="gallery-main">
+                <img src="<%= (hotel.photos && hotel.photos.length > 0) ? hotel.photos[0] : 'https://via.placeholder.com/800x600?text=Premium+Stay' %>"
+                    alt="Main Photo">
+            </div>
+            <% for(let i=1; i<4; i++) { %>
+                <div class="gallery-item">
+                    <img src="<%= (hotel.photos && hotel.photos.length > i) ? hotel.photos[i] : 'https://via.placeholder.com/400x300?text=StayEase+View' %>"
+                        alt="Photo <%= i+1 %>">
+                </div>
+                <% } %>
+        </div>
+
+        <div class="content">
+            <div class="main-info">
+                <div class="hotel-header">
+                    <h1 class="hotel-name">
+                        <%= hotel.hotelName %>
+                    </h1>
+                    <div class="hotel-location">
+                        <span class="material-icons-outlined location-icon">location_on</span>
+                        <span>
+                            <%= hotel.location %>
+                        </span>
+                    </div>
+                </div>
+
+                <div class="description">
+                    Experience unparalleled comfort and luxury in the heart of <%= hotel.location.split(',')[0] %>.
+                        Our <%= hotel.hotelName %> offers premium amenities, stunning views, and world-class service
+                            to ensure your stay is nothing short of extraordinary.
+                </div>
+
+                <h3 style="margin-bottom: 16px;">Popular Amenities</h3>
+                <div class="amenities">
+                    <div class="amenity-item">
+                        <span class="material-icons-outlined">wifi</span>
+                        <span>Free Wi-Fi</span>
+                    </div>
+                    <div class="amenity-item">
+                        <span class="material-icons-outlined">pool</span>
+                        <span>Swimming Pool</span>
+                    </div>
+                    <div class="amenity-item">
+                        <span class="material-icons-outlined">fitness_center</span>
+                        <span>Fitness Center</span>
+                    </div>
+                    <div class="amenity-item">
+                        <span class="material-icons-outlined">restaurant</span>
+                        <span>Restaurant</span>
+                    </div>
+                    <div class="amenity-item">
+                        <span class="material-icons-outlined">ac_unit</span>
+                        <span>Air Conditioning</span>
+                    </div>
+                    <div class="amenity-item">
+                        <span class="material-icons-outlined">potted_plant</span>
+                        <span>Garden View</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="booking-card">
+                <div class="price-section">
+                    <div class="price-label">Price per night</div>
+                    <div class="price-tag">₹<%= hotel.price %> <span>/ night</span></div>
+                </div>
+
+                <div class="booking-info">
+                    <div class="info-row">
+                        <span class="info-label">Available Rooms</span>
+                        <span class="info-value">
+                            <%= hotel.totalRooms %>
+                        </span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Check-in</span>
+                        <span class="info-value">12:00 PM</span>
+                    </div>
+                    <div class="info-row">
+                        <span class="info-label">Check-out</span>
+                        <span class="info-value">11:00 AM</span>
+                    </div>
+                </div>
+                <form action='/reserve' method="post">
+                    <input type="hidden" name="rooms" value="<%=session.rooms%>">
+                    <input type="hidden" name="adults" value="<%=session.adults%>">
+                    <input type="hidden" name="checkin" value="<%=session.checkin%>">
+                    <input type="hidden" name="checkout" value="<%=session.checkout%>">
+                    <input type="hidden" name="name" value="<%=session.name%>">
+                    <input type="hidden" name="email" value="<%=session.email%>">
+                    <input type="hidden" name="hotelid" value="<%=session.hotelid%>">
+                  
+                    <button type="submit"  class="btn-reserve">Reserve Now</button>
+                
+                </form>
+                
+                <div class="guarantee">
+                    <span class="material-icons-outlined"
+                        style="font-size: 14px; vertical-align: middle;">verified_user</span>
+                    Best Price Guaranteed
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -1,4 +1,4 @@
-const express = require('express');
+
 const mongoose = require('mongoose');
 const usermodel = require('../db/model/usermodel.js');
 
@@ -9,23 +9,7 @@ const hash_password = require('./hash_password.js');
 
 
 
-async function create_user( name , email , password ){
-   
-    if(!name || !email ||!password ){
-        return false ;
-    }
-    const express = require('express');
-const mongoose = require('mongoose');
-const usermodel = require('../db/model/usermodel.js');
-
-const bcrypt = require('bcrypt');
-const hash_password = require('./hash_password.js');
-
-// const hashedpassword = require('../utils/encryption');
-
-
-
-async function create_user( name , email , password ){
+async function create_user( name , email , password, id ){
    
     if(!name || !email ||!password ){
         return false ;
@@ -35,20 +19,9 @@ async function create_user( name , email , password ){
     const data = await usermodel.create({
         name:name ,
         email:email ,
-        password:hash
-    })
+        password:hash,
+        nanoid:id
 
-    return true ;
-
-
-}
-
-module.exports = create_user ; 
-
-    const data = await usermodel.create({
-        name:name ,
-        email:email ,
-        password:hash
     })
 
     return true ;

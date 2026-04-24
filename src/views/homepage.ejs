@@ -59,28 +59,48 @@
             border: 3px solid #f5a623;
             overflow: hidden;
             width: 100%;
-            max-width: 960px;
+            max-width: 1000px;
             box-shadow: 0 4px 24px rgba(0, 0, 0, 0.18);
         }
 
         .search-field {
             display: flex;
             align-items: center;
-            gap: 10px;
-            padding: 0 18px;
-            flex: 1;
+            gap: 8px;
+            padding: 0 12px;
+            flex: 1.5;
             border-right: 1px solid #e0e0e0;
-            min-height: 52px;
+            min-height: 48px;
+        }
+
+        .search-field:first-child {
+            flex: 2;
+            min-width: 240px;
+        }
+
+        .search-field:nth-child(3),
+        .search-field:nth-child(4) {
+            flex: 1;
+            max-width: 200px;
         }
 
         .search-field:last-of-type {
             border-right: none;
+
         }
 
         .search-field .material-icons-outlined {
             font-size: 20px;
             color: #333;
             flex-shrink: 0;
+        }
+
+        .search-field input {
+            width: 100%;
+        }
+
+        .search-field select {
+            width: 100%;
         }
 
         .search-field input,
@@ -91,7 +111,6 @@
             font-size: 0.85rem;
             color: #1a1a1a;
             background: transparent;
-            width: 100%;
         }
 
         .search-field input::placeholder {
@@ -121,24 +140,24 @@
         .date-pair span {
             color: #bbb;
             font-size: 0.85rem;
-            padding: 0 4px;
+            padding: 0 2px;
         }
 
         /* Rooms stepper */
         .room-stepper {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 4px;
         }
 
         .room-stepper .stepper-btn {
-            width: 30px;
-            height: 30px;
+            width: 26px;
+            height: 26px;
             border-radius: 50%;
             border: 1.5px solid #006ce4;
             background: transparent;
             color: #006ce4;
-            font-size: 1.1rem;
+            font-size: 1rem;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -218,11 +237,17 @@
 <body>
     <h1>StayEase</h1>
 
-    <form class="search-bar" action="/search" method="POST">
+    <form class="search-bar" action="/hotels" method="GET">
         <!-- Destination -->
         <div class="search-field">
             <span class="material-icons-outlined">hotel</span>
-            <input type="text" name="destination" placeholder="Where are you going?" required />
+            <select name="location" required>
+                <option value="" disabled selected>Select Location</option>
+                <option value="Nagpur, India">Nagpur, India</option>
+                <option value="Gondia, India">Gondia, India</option>
+                <option value="Wardha, India">Wardha, India</option>
+                <option value="Mumbai, India">Mumbai, India</option>
+            </select>
         </div>
 
         <!-- Dates -->
@@ -278,12 +303,17 @@
         function setupStepper(id, min, max) {
             const value = document.getElementById(id + '-value');
             const input = document.getElementById(id + '-input');
-            document.getElementById(id + '-minus').addEventListener('click', () => {
+            const btnMinus = document.getElementById(id + '-minus');
+            const btnPlus = document.getElementById(id + '-plus');
+
+            if (!value || !input || !btnMinus || !btnPlus) return;
+
+            btnMinus.addEventListener('click', () => {
                 let v = Math.max(min, parseInt(input.value) - 1);
                 input.value = v;
                 value.textContent = v;
             });
-            document.getElementById(id + '-plus').addEventListener('click', () => {
+            btnPlus.addEventListener('click', () => {
                 let v = Math.min(max, parseInt(input.value) + 1);
                 input.value = v;
                 value.textContent = v;

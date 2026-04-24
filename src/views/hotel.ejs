@@ -44,10 +44,10 @@
 
         .form-container {
             background: #fff;
-            padding: 40px;
+            padding: 30px;
             border-radius: 12px;
             width: 100%;
-            max-width: 500px;
+            max-width: 1100px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
         }
 
@@ -67,7 +67,7 @@
         }
 
         .form-group {
-            margin-bottom: 24px;
+            margin-bottom: 16px;
         }
 
         .label-wrapper {
@@ -104,7 +104,7 @@
         .stepper {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 8px;
             background: #f9f9f9;
             padding: 8px 16px;
             border-radius: 6px;
@@ -160,6 +160,64 @@
         .btn-submit:hover {
             background: #0057b8;
         }
+
+        /* Photo Upload Styling */
+        .photos-container {
+            margin-bottom: 24px;
+        }
+
+        .photo-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        .photo-slot {
+            aspect-ratio: 1 / 1;
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+            background: #fcfcfc;
+            transition: all 0.2s;
+        }
+
+        .photo-slot:hover {
+            border-color: #006ce4;
+            background: #f0f7ff;
+        }
+
+        .photo-slot .material-icons-outlined {
+            font-size: 32px;
+            color: #aaa;
+        }
+
+        .photo-slot img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            position: absolute;
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .photo-slot input[type="file"] {
+            display: none;
+        }
+
+        .photo-slot.has-image {
+            border: 1.5px solid #006ce4;
+        }
+
+        .photo-slot.has-image .material-icons-outlined {
+            display: none;
+        }
     </style>
 </head>
 
@@ -168,7 +226,7 @@
         <h1>Hotel Details</h1>
         <p class="subtitle">Please enter your hotel information below</p>
 
-        <form action="/hotel" method="POST">
+        <form action="/add-hotel" method="POST" enctype="multipart/form-data">
             <!-- Hotel Name -->
             <div class="form-group">
                 <div class="label-wrapper">
@@ -185,8 +243,13 @@
                     <span class="material-icons-outlined">location_on</span>
                     <label for="location">Hotel Location</label>
                 </div>
-                <input type="text" id="location" name="location" class="input-field" placeholder="e.g. New York, USA"
-                    required />
+                <select id="location" name="location" class="input-field" required>
+                    <option value="" disabled selected>Select Location</option>
+                    <option value="Nagpur, India">Nagpur, India</option>
+                    <option value="Gondia, India">Gondia, India</option>
+                    <option value="Wardha, India">Wardha, India</option>
+                    <option value="Mumbai, India">Mumbai, India</option>
+                </select>
             </div>
 
             <!-- Total Rooms -->
@@ -203,11 +266,83 @@
                 <input type="hidden" name="totalRooms" id="rooms-input" value="1" />
             </div>
 
+            <!-- Price per Night -->
+            <div class="form-group">
+                <div class="label-wrapper">
+                    <span class="material-icons-outlined">payments</span>
+                    <label for="price">Price per Night (₹)</label>
+                </div>
+                <input type="number" id="price" name="price" class="input-field" placeholder="e.g. 5000" min="0"
+                    required />
+            </div>
+
+            <!-- Hotel Photos -->
+            <div class="photos-container">
+                <div class="label-wrapper">
+                    <span class="material-icons-outlined">photo_library</span>
+                    <label>Hotel Photos (4 required)</label>
+                </div>
+                <div class="photo-grid">
+                    <div class="photo-slot" onclick="document.getElementById('photo1').click()" id="slot1">
+                        <span class="material-icons-outlined">add_a_photo</span>
+                        <input type="file" id="photo1" name="hotelPhotos" accept="image/*"
+                            onchange="previewImage(this, 'slot1')" required />
+                    </div>
+                    <div class="photo-slot" onclick="document.getElementById('photo2').click()" id="slot2">
+                        <span class="material-icons-outlined">add_a_photo</span>
+                        <input type="file" id="photo2" name="hotelPhotos" accept="image/*"
+                            onchange="previewImage(this, 'slot2')" required />
+                    </div>
+                    <div class="photo-slot" onclick="document.getElementById('photo3').click()" id="slot3">
+                        <span class="material-icons-outlined">add_a_photo</span>
+                        <input type="file" id="photo3" name="hotelPhotos" accept="image/*"
+                            onchange="previewImage(this, 'slot3')" required />
+                    </div>
+                    <div class="photo-slot" onclick="document.getElementById('photo4').click()" id="slot4">
+                        <span class="material-icons-outlined">add_a_photo</span>
+                        <input type="file" id="photo4" name="hotelPhotos" accept="image/*"
+                            onchange="previewImage(this, 'slot4')" required />
+                    </div>
+                </div>
+            </div>
+
             <button type="submit" class="btn-submit">Add Hotel</button>
         </form>
     </div>
 
     <script>
+        const params = new URLSearchParams(window.location.search);
+
+        if (params.get("success")) {
+
+            // remove query param (important)
+            window.history.replaceState({}, document.title, "/hotel");
+
+            const popup = document.createElement("div");
+            popup.innerText = "Hotel added successfully";
+
+            popup.style.position = "fixed";
+            popup.style.top = "20px";
+            popup.style.right = "20px";
+            popup.style.background = "green";
+            popup.style.color = "white";
+            popup.style.padding = "15px 20px";
+            popup.style.borderRadius = "6px";
+            popup.style.zIndex = "1000";
+            popup.style.opacity = "1";
+            popup.style.transition = "opacity 0.5s ease";
+
+            document.body.appendChild(popup);
+
+            setTimeout(() => {
+                popup.style.opacity = "0"; // fade out
+            }, 5000);
+
+            setTimeout(() => {
+                popup.remove();
+                window.location.href = "/homepage";
+            }, 6000);
+        }
         const roomsValue = document.getElementById('rooms-value');
         const roomsInput = document.getElementById('rooms-input');
 
@@ -220,6 +355,24 @@
 
         document.getElementById('rooms-minus').addEventListener('click', () => updateRooms(-1));
         document.getElementById('rooms-plus').addEventListener('click', () => updateRooms(1));
+
+        function previewImage(input, slotId) {
+            const slot = document.getElementById(slotId);
+            if (input.files && input.files[0]) {
+                const reader = new FileReader();
+                reader.onload = function (e) {
+                    // Remove existing image if any
+                    const existingImg = slot.querySelector('img');
+                    if (existingImg) existingImg.remove();
+
+                    const img = document.createElement('img');
+                    img.src = e.target.result;
+                    slot.appendChild(img);
+                    slot.classList.add('has-image');
+                }
+                reader.readAsDataURL(input.files[0]);
+            }
+        }
     </script>
 </body>
 
