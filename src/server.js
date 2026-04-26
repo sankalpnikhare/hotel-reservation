@@ -42,9 +42,9 @@ const app = express();
 app.use(session({
     secret: 'mysecretkey',
     resave: false,
-    saveUninitialized: false, // 🔥 change this
+    saveUninitialized: false,
     cookie: {
-        maxAge: 1000 * 60 * 60, // 1 hour
+        maxAge: 1000 * 60 * 60,
         httpOnly: true
     }
 }));
@@ -56,11 +56,23 @@ app.use(express.static(__dirname + '/public'));
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 mongodb_connect();
+app.use((req, res, next) => {
+    res.locals.user = req.session.name || null;
+    next();
+});
 
-
+app.use((req, res, next) => {
+    res.locals.email = req.session.email || null
+    next();
+});
+app.use((req, res, next) => {
+    res.locals.userid = req.session.userid || null
+    next();
+});
 app.get('/', (req, res) => {
     res.render('homepage');
 });
+
 
 app.get('/register', (req, res) => {
     res.render('register');
@@ -102,22 +114,24 @@ app.get('/otp', (req, res) => {
 
 app.post('/otp', async (req, res) => {
     if (req.body.otp !== req.session.otp) {
-        return res.send("There was a problem");
+        req.session.destroy();
+        return res.send("Wrong OTP");
     }
 
     const hashed = await hash_password(req.session.user.password);
-    const id = nanoid();
+    const userid = nanoid();
 
     await create_user(
         req.session.user.name,
         req.session.user.email,
         req.session.user.password,
-        id
+        userid
     );
 
     const payload = {
         name: req.session.user.name,
-        email: req.session.user.email
+        email: req.session.user.email,
+        
     };
 
     const token = jwt.sign(payload, process.env.JWT_SECRET_KEY)
@@ -157,12 +171,14 @@ app.post('/login', async (req, res) => {
 
         const payload = {
             name: user.name,
-            email: user.email
+            email: user.email,
+            ownerid:user.userid
         };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
         req.session.name = user.name;
         req.session.email = user.email;
+        req.session.userid =  user.userid 
 
         req.session.token = token;
 
@@ -172,6 +188,9 @@ app.post('/login', async (req, res) => {
         return res.status(500).send("Error")
     }
 });
+
+
+
 
 
 app.get('/homepage', (req, res) => {
@@ -193,11 +212,14 @@ app.get('/add-user', (req, res) => {
 app.post('/add-user', async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        // const hash = await hash_password(req.body.password);
+        const userid = nanoid(); 
+        // console.log(userid);
+        
+       
 
 
-        const add = await create_user(name, email, password);
-        res.send("Succ")
+        const add = await create_user(name, email, password , userid);
+        res.redirect('/') ; 
     } catch (err) {
         return res.status(500).send("Error")
     }
@@ -205,19 +227,18 @@ app.post('/add-user', async (req, res) => {
 })
 
 
-app.get('/add-hotel', authtoken, (req, res) => {
+app.get('/add-property', authtoken, (req, res) => {
     res.render('hotel')
 })
 
 app.get('/hotels', async (req, res) => {
     const location = req.query.location;
-    // console.log(req.query);
-    // console.log(req.session.email);
+    
     req.session.rooms = req.query.rooms;
     req.session.adults = req.query.adults;
     req.session.checkin = req.query.checkin;
     req.session.checkout = req.query.checkout;
-    // console.log(req.session);
+    
 
 
 
@@ -236,17 +257,19 @@ app.get('/hotels', async (req, res) => {
 
 
 
-app.post('/add-hotel', upload.array('hotelPhotos', 4), async (req, res) => {
+app.post('/add-property', upload.array('hotelPhotos', 4), async (req, res) => {
 
 
     try {
-        const { hotelName, location, totalRooms, price } = req.body;
+        const { hotelName, location, address, totalRooms, price } = req.body;
 
 
         const imagePaths = req.files.map(file => `/uploads/${file.filename}`);
         const ownername = req.session.name;
         const user = await check_email(req.session.email);
-        const ownerid = user.nanoid;
+        const ownerid = user.userid;
+        // console.log("The owner id of the listed property is :" , ownerid); //got the owner id 
+        
 
 
 
@@ -257,14 +280,17 @@ app.post('/add-hotel', upload.array('hotelPhotos', 4), async (req, res) => {
             ownerid,
             hotelName,
             location,
+            address,
             price,
             totalRooms,
             photos: imagePaths
 
         })
+        // console.log("Hotel obj" ,  newHotel);
+        
         await newHotel.save();
 
-        res.send("Hotel added successfully")
+        res.send("Property added successfully")
         // res.redirect('/hotel?success=1');
     } catch (err) {
 
@@ -295,28 +321,46 @@ app.get('/hotel/:id', async (req, res) => {
 
 app.post('/reserve', async (req, res) => {
 
-    const hotelid = req.body.hotelid;   //Not getting the hotel id 
+    try {
+        const hotelid = req.body.hotelid;   //Not getting the hotel id 
 
 
-    const hotel = await hotelModel.find({ _id: hotelid });
+        const hotel = await hotelModel.find({ _id: hotelid });
+        const hotelName = hotel[0].hotelName ; 
+        const hotellocation = hotel[0].location ; 
+        // console.log(hotellocation);
+        
 
 
-    const ownerid = hotel[0].ownerid;
+        const ownerid = hotel[0].ownerid;
 
 
-    const owner = await usermodel.find({ nanoid: ownerid });
+        const owner = await usermodel.find({ nanoid: ownerid });
 
 
-    const owneremail = owner[0].email;
-    console.log(owneremail);
-    
+        const owneremail = owner[0].email;
+        // console.log(owneremail);
 
-    //got the owner email !
 
-    await sendMail(
-        owneremail,
-        "New Booking",
-        `
+        //got the owner email !
+
+        //got the owner email !
+
+        const newBooking = new bookingmodel({
+            userEmail: req.session.email,
+            hotelName,
+            location : hotellocation, 
+            rooms: req.body.rooms,
+            people: req.body.adults,
+            checkin: new Date(req.body.checkin),
+            checkout: new Date(req.body.checkout),
+            status: "Confirmed"
+        });
+        await newBooking.save();
+        await sendMail(
+            owneremail,
+            "New Booking",
+            `
   <h2>New Booking Request</h2>
 
   <p><strong>Name:</strong> ${req.body.name}</p>
@@ -332,18 +376,43 @@ app.post('/reserve', async (req, res) => {
   <p><strong>Check-in:</strong> ${req.body.checkin}</p>
   <p><strong>Check-out:</strong> ${req.body.checkout}</p>
   `
-    );
+        );
 
 
 
 
 
 
-    res.send("Succ")
+        res.send("Succ")
+    } catch (err) {
+        return res.send("Error")
+    }
 
 
 
 
+})
+
+app.get('/profile' , authtoken , async(req,res)=>{
+    const ownerid = req.session.userid ; 
+    
+
+
+    const listedProperties = await hotelModel.find({ownerid:ownerid})
+    const useremail = req.session.email ;
+    
+    const bookedProperties = await bookingmodel.find({userEmail : useremail})
+    res.render('profile' , {listedProperties , bookedProperties})
+});
+ 
+app.get('/logout', (req, res) => {
+    req.session.destroy((err) => {
+        if (err) {
+            return res.send("Error logging out")
+        };
+    })
+
+    res.redirect('/');
 })
 app.listen(5000, () => {
     console.log(`Server listening at port 5000`);

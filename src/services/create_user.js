@@ -9,9 +9,9 @@ const hash_password = require('./hash_password.js');
 
 
 
-async function create_user( name , email , password, id ){
+async function create_user( name , email , password, userid ){
    
-    if(!name || !email ||!password ){
+    if(!name || !email ||!password ||!userid ){
         return false ;
     }
     const hash = await hash_password(password);
@@ -20,7 +20,7 @@ async function create_user( name , email , password, id ){
         name:name ,
         email:email ,
         password:hash,
-        nanoid:id
+        userid:userid
 
     })
 

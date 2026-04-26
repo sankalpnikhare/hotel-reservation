@@ -13,7 +13,7 @@ const userschema = mongoose.Schema({
         required:true,
         type:String
     },
-    nanoid:String
+    userid:String
 })
 
 const usermodel =new  mongoose.model('users',  userschema); 

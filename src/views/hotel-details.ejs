@@ -204,6 +204,36 @@
             background: #0056b3;
         }
 
+        /* ── Address Bar ── */
+        .address-bar {
+            background-color: #f0f6ff;
+            border: 1px solid #c5d7f2;
+            padding: 16px 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--text-main);
+        }
+
+        .address-bar i {
+            color: var(--secondary-blue);
+            font-size: 24px;
+        }
+
+        .address-label {
+            font-size: 14px;
+            font-weight: 700;
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .address-text {
+            font-size: 14px;
+            color: var(--text-muted);
+        }
+
         /* Mobile */
         @media (max-width: 768px) {
             .detail-grid {
@@ -241,7 +271,7 @@
             <div class="hotel-location">
                 <span class="material-icons-outlined">location_on</span>
                 <span>
-                    <%= hotel.location %>
+                    <%= hotel.address %>, <%= hotel.location %>
                 </span>
             </div>
         </div>
@@ -257,6 +287,16 @@
                         alt="Photo <%= i+1 %>">
                 </div>
                 <% } %>
+        </div>
+
+        <div class="address-bar">
+            <i class="material-icons-outlined">place</i>
+            <div class="address-content">
+                <span class="address-label">Street address</span>
+                <span class="address-text">
+                    <%= hotel.address %>, <%= hotel.location %>
+                </span>
+            </div>
         </div>
 
         <div class="detail-grid">
