@@ -180,6 +180,22 @@
             gap: 4px;
         }
 
+        .hotel-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .list-item {
+            transition: 0.2s ease;
+            cursor: pointer;
+        }
+
+        .hotel-link:hover .list-item {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.15);
+        }
+
         .item-price {
             font-weight: 700;
             color: var(--text-main);
@@ -267,32 +283,57 @@
                 <button class="tab-btn" onclick="openTab(event, 'booked')">Booked Properties</button>
             </div>
 
+            
             <!-- Listed Properties Tab -->
             <div id="listed" class="tab-content active">
                 <% if (typeof listedProperties !=='undefined' && listedProperties.length> 0) { %>
+
                     <div class="item-list">
+
                         <% listedProperties.forEach(hotel=> { %>
-                            <div class="list-item">
-                                <div class="item-main">
-                                    <h3>
-                                        <%= hotel.hotelName %>
-                                    </h3>
-                                    <p><i class="material-icons-outlined" style="font-size: 16px;">location_on</i>
-                                        <%= hotel.location %>
-                                    </p>
+
+                            <a href="/hotel/<%= hotel._id %>" class="hotel-link">
+
+                                <div class="list-item">
+
+                                    <div class="item-main">
+                                        <h3>
+                                            <%= hotel.hotelName %>
+                                        </h3>
+
+                                        <p>
+                                            <i class="material-icons-outlined" style="font-size: 16px;">
+                                                location_on
+                                            </i>
+
+                                            <%= hotel.location %>
+                                        </p>
+                                    </div>
+
+                                    <div class="item-price">
+                                        ₹<%= hotel.price %> / night
+                                    </div>
+
                                 </div>
-                                <div class="item-price">
-                                    ₹<%= hotel.price %> / night
-                                </div>
-                            </div>
+
+                            </a>
+
                             <% }); %>
+
                     </div>
+
                     <% } else { %>
+
                         <div class="empty-state">
                             <i class="material-icons-outlined">business</i>
+
                             <p>You haven't listed any properties yet.</p>
-                            <a href="/add-property" class="btn-action">List your property</a>
+
+                            <a href="/add-property" class="btn-action">
+                                List your property
+                            </a>
                         </div>
+
                         <% } %>
             </div>
 
@@ -300,20 +341,21 @@
             <div id="booked" class="tab-content">
                 <% if (typeof bookedProperties !=='undefined' && bookedProperties.length> 0) { %>
                     <div class="item-list">
-                        <% bookedProperties.forEach(booking=> { %>
+                        <% bookedProperties.forEach(hotel=> { %>
+                        <a href="/hotel/<%= hotel.hotel_id %>" class="hotel-link">
                             <div class="list-item">
                                 <div class="item-main">
                                     <h3>
-                                        <%= booking.hotelName || 'Property Booking' %>
+                                        <%= hotel.hotelName || 'Property Booking' %>
                                     </h3>
                                     <p><i class="material-icons-outlined" style="font-size: 16px;">event</i>
-                                        <%= new Date(booking.checkin).toLocaleDateString() %> — <%= new
-                                                Date(booking.checkout).toLocaleDateString() %>
+                                        <%= new Date(hotel.checkin).toLocaleDateString() %> — <%= new
+                                                Date(hotel.checkout).toLocaleDateString() %>
                                     </p>
                                 </div>
                                 <div
-                                    class="item-price <%= (booking.status || 'Confirmed') === 'Confirmed' ? 'status-confirmed' : '' %>">
-                                    <%= booking.status || 'Confirmed' %>
+                                    class="item-price <%= (hotel.status || 'Confirmed') === 'Confirmed' ? 'status-confirmed' : '' %>">
+                                    <%= hotel.status || 'Confirmed' %>
                                 </div>
                             </div>
                             <% }); %>
@@ -323,8 +365,11 @@
                             <i class="material-icons-outlined">event_busy</i>
                             <p>No bookings found.</p>
                             <a href="/" class="btn-action">Start searching</a>
+                        
                         </div>
+                        
                         <% } %>
+                    </a>
             </div>
         </section>
     </main>

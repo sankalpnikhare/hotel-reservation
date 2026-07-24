@@ -12,8 +12,13 @@ const bookingschema = new mongoose.Schema({
     rooms:Number,
     people:Number,
 
+    hotel_id:String, 
+
+
     checkin:Date,
     checkout:Date,
+
+    
 
     status:{
         type:String, 
