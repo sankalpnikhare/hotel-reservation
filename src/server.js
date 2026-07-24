@@ -140,7 +140,7 @@ app.post('/otp', async (req, res) => {
     req.session.token = token;
 
 
-    // req.session.user = null;
+    
     req.session.otp = null;
 
     return res.redirect('/homepage');
@@ -214,7 +214,7 @@ app.post('/add-user', async (req, res) => {
     try {
         const { name, email, password } = req.body;
         const userid = nanoid(); 
-        // console.log(userid);
+        
         
        
 
@@ -269,7 +269,7 @@ app.post('/add-property', upload.array('hotelPhotos', 4), async (req, res) => {
         const ownername = req.session.name;
         const user = await check_email(req.session.email);
         const ownerid = user.userid;
-        // console.log("The owner id of the listed property is :" , ownerid); //got the owner id 
+        
         
 
 
@@ -287,12 +287,12 @@ app.post('/add-property', upload.array('hotelPhotos', 4), async (req, res) => {
             photos: imagePaths
 
         })
-        // console.log("Hotel obj" ,  newHotel);
+        
         
         await newHotel.save();
 
         res.send("Property added successfully")
-        // res.redirect('/hotel?success=1');
+        /
     } catch (err) {
 
         res.status(500).send("Error");
@@ -306,7 +306,7 @@ app.get('/hotel/:id', async (req, res) => {
     try {
         const hotel = await hotelModel.findOne({ _id: req.params.id });
         req.session.hotelid = req.params.id;
-        // console.log(req.session.hotelid);
+        
 
         if (!hotel) {
             return res.status(404).send("Hotel not found");
@@ -324,14 +324,14 @@ app.post('/reserve', async (req, res) => {
 
     try {
         const hotelid = req.body.hotelid;   
-        // console.log(hotelid);
+       
         
 
 
         const hotel = await hotelModel.find({ _id: hotelid });
         const hotelName = hotel[0].hotelName ; 
         const hotellocation = hotel[0].location ; 
-        // console.log(hotellocation);
+        
         
 
 
@@ -342,12 +342,8 @@ app.post('/reserve', async (req, res) => {
 
 
         const owneremail = owner[0].email;
-        // console.log(owneremail);
+       
 
-
-        //got the owner email !
-
-        //got the owner email !
 
         const newBooking = new bookingmodel({
             userEmail: req.session.email,
@@ -361,26 +357,26 @@ app.post('/reserve', async (req, res) => {
             hotel_id:hotelid
         });
         await newBooking.save();
-//         await sendMail(
-//             owneremail,
-//             "New Booking",
-//             `
-//   <h2>New Booking Request</h2>
+        await sendMail(
+            owneremail,
+            "New Booking",
+            `
+  <h2>New Booking Request</h2>
 
-//   <p><strong>Name:</strong> ${req.body.name}</p>
-//   <p><strong>Email:</strong> ${req.body.email}</p>  ////Sending the email
+  <p><strong>Name:</strong> ${req.body.name}</p>
+  <p><strong>Email:</strong> ${req.body.email}</p>  ////Sending the email
 
-//   <hr>
+  <hr>
 
-//   <p><strong>Rooms:</strong> ${req.body.rooms}</p>
-//   <p><strong>Adults:</strong> ${req.body.adults}</p>
+  <p><strong>Rooms:</strong> ${req.body.rooms}</p>
+  <p><strong>Adults:</strong> ${req.body.adults}</p>
 
-//   <hr>
+  <hr>
 
-//   <p><strong>Check-in:</strong> ${req.body.checkin}</p>
-//   <p><strong>Check-out:</strong> ${req.body.checkout}</p>
-//   `
-//         );
+  <p><strong>Check-in:</strong> ${req.body.checkin}</p>
+  <p><strong>Check-out:</strong> ${req.body.checkout}</p>
+  `
+        );
 
 
 
