@@ -237,6 +237,39 @@
             background: #0056b3;
         }
 
+        .btn-delete {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 14px;
+            background: transparent;
+            color: #dc3545;
+            border: 1px solid #dc3545;
+            border-radius: 4px;
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: 'Inter', sans-serif;
+            white-space: nowrap;
+        }
+
+        .btn-delete:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .btn-delete i {
+            font-size: 16px;
+        }
+
+        .item-actions {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+        }
+
         @media (max-width: 600px) {
             .user-card {
                 flex-direction: column;
@@ -310,8 +343,14 @@
                                         </p>
                                     </div>
 
-                                    <div class="item-price">
-                                        ₹<%= hotel.price %> / night
+                                    <div class="item-actions">
+                                        <div class="item-price">
+                                            ₹<%= hotel.price %> / night
+                                        </div>
+                                        <button class="btn-delete" onclick="deleteProperty(event, '<%= hotel._id %>')">
+                                            <i class="material-icons-outlined">delete</i>
+                                            Delete
+                                        </button>
                                     </div>
 
                                 </div>
@@ -375,6 +414,39 @@
     </main>
 
     <script>
+        function deleteProperty(event, hotelId) {
+            event.preventDefault();
+            event.stopPropagation();
+
+            if (!confirm('Are you sure you want to delete this property? This action cannot be undone.')) {
+                return;
+            }
+
+            fetch('/delete-property/' + hotelId, { method: 'DELETE' })
+                .then(function (res) {
+                    if (res.ok) {
+                        var link = event.target.closest('.hotel-link');
+                        var list = link.parentElement;
+                        link.remove();
+
+                        if (list.children.length === 0) {
+                            var tab = document.getElementById('listed');
+                            tab.innerHTML =
+                                '<div class="empty-state">' +
+                                '<i class="material-icons-outlined">business</i>' +
+                                '<p>You haven\'t listed any properties yet.</p>' +
+                                '<a href="/add-property" class="btn-action">List your property</a>' +
+                                '</div>';
+                        }
+                    } else {
+                        alert('Failed to delete property. Please try again.');
+                    }
+                })
+                .catch(function () {
+                    alert('Something went wrong. Please try again.');
+                });
+        }
+
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab-content");

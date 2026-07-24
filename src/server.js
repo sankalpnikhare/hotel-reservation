@@ -292,7 +292,7 @@ app.post('/add-property', upload.array('hotelPhotos', 4), async (req, res) => {
         await newHotel.save();
 
         res.send("Property added successfully")
-        /
+        
     } catch (err) {
 
         res.status(500).send("Error");
@@ -403,6 +403,28 @@ app.get('/profile' , authtoken , async(req,res)=>{
     
     const bookedProperties = await bookingmodel.find({userEmail : useremail})
     res.render('profile' , {listedProperties , bookedProperties})
+});
+
+app.delete('/delete-property/:id', authtoken, async (req, res) => {
+    try {
+        const hotelId = req.params.id;
+        const ownerid = req.session.userid;
+
+        const hotel = await hotelModel.findById(hotelId);
+        if (!hotel) {
+            return res.status(404).send("Property not found");
+        }
+
+        if (hotel.ownerid !== ownerid) {
+            return res.status(403).send("Unauthorized");
+        }
+
+        await hotelModel.findByIdAndDelete(hotelId);
+        res.status(200).send("Property deleted successfully");
+    } catch (err) {
+        console.error(err);
+        res.status(500).send("Error deleting property");
+    }
 });
  
 app.get('/logout', (req, res) => {
