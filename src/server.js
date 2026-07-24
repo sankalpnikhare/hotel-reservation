@@ -21,6 +21,7 @@ const bcrypt = require('bcrypt');
 const { create } = require('domain');
 const { nanoid } = require('nanoid');
 const bookingmodel = require('./db/model/bookingmodel');
+const { log } = require('console');
 
 
 
@@ -322,7 +323,9 @@ app.get('/hotel/:id', async (req, res) => {
 app.post('/reserve', async (req, res) => {
 
     try {
-        const hotelid = req.body.hotelid;   //Not getting the hotel id 
+        const hotelid = req.body.hotelid;   
+        // console.log(hotelid);
+        
 
 
         const hotel = await hotelModel.find({ _id: hotelid });
@@ -354,29 +357,30 @@ app.post('/reserve', async (req, res) => {
             people: req.body.adults,
             checkin: new Date(req.body.checkin),
             checkout: new Date(req.body.checkout),
-            status: "Confirmed"
+            status: "Confirmed",
+            hotel_id:hotelid
         });
         await newBooking.save();
-        await sendMail(
-            owneremail,
-            "New Booking",
-            `
-  <h2>New Booking Request</h2>
+//         await sendMail(
+//             owneremail,
+//             "New Booking",
+//             `
+//   <h2>New Booking Request</h2>
 
-  <p><strong>Name:</strong> ${req.body.name}</p>
-  <p><strong>Email:</strong> ${req.body.email}</p>
+//   <p><strong>Name:</strong> ${req.body.name}</p>
+//   <p><strong>Email:</strong> ${req.body.email}</p>  ////Sending the email
 
-  <hr>
+//   <hr>
 
-  <p><strong>Rooms:</strong> ${req.body.rooms}</p>
-  <p><strong>Adults:</strong> ${req.body.adults}</p>
+//   <p><strong>Rooms:</strong> ${req.body.rooms}</p>
+//   <p><strong>Adults:</strong> ${req.body.adults}</p>
 
-  <hr>
+//   <hr>
 
-  <p><strong>Check-in:</strong> ${req.body.checkin}</p>
-  <p><strong>Check-out:</strong> ${req.body.checkout}</p>
-  `
-        );
+//   <p><strong>Check-in:</strong> ${req.body.checkin}</p>
+//   <p><strong>Check-out:</strong> ${req.body.checkout}</p>
+//   `
+//         );
 
 
 
