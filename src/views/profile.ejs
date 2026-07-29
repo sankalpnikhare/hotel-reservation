@@ -144,7 +144,132 @@
             display: block;
         }
 
-        /* ── Lists ── */
+        /* ── Property Cards Grid ── */
+        .property-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .property-card {
+            background: #fff;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            overflow: hidden;
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .property-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 8px 24px rgba(0, 53, 128, 0.12);
+        }
+
+        .property-card-link {
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .property-card-img {
+            width: 100%;
+            height: 190px;
+            object-fit: cover;
+            display: block;
+            background: #e0e7ef;
+        }
+
+        .property-card-body {
+            padding: 16px 18px 8px;
+            flex: 1;
+        }
+
+        .property-card-body h3 {
+            font-size: 17px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            color: var(--text-main);
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .property-card-location {
+            font-size: 13px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            margin-bottom: 10px;
+        }
+
+        .property-card-location i {
+            font-size: 15px;
+            color: #dc3545;
+        }
+
+        .property-card-price {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 4px;
+        }
+
+        .property-card-price span {
+            font-size: 13px;
+            font-weight: 400;
+            color: var(--text-muted);
+        }
+
+        .property-card-actions {
+            display: flex;
+            gap: 0;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .property-card-actions .btn-card {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            padding: 12px 0;
+            font-size: 13px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s, color 0.2s;
+        }
+
+        .property-card-actions .btn-card i {
+            font-size: 17px;
+        }
+
+        .btn-edit {
+            background: var(--secondary-blue);
+            color: #fff;
+            border-radius: 0 0 0 12px;
+        }
+
+        .btn-edit:hover {
+            background: #0056b3;
+        }
+
+        .btn-card-delete {
+            background: #fff;
+            color: #dc3545;
+            border-radius: 0 0 12px 0;
+            border-left: 1px solid var(--border-color) !important;
+        }
+
+        .btn-card-delete:hover {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        /* ── Booked Properties List (unchanged) ── */
         .item-list {
             display: flex;
             flex-direction: column;
@@ -159,6 +284,7 @@
             border: 1px solid var(--border-color);
             border-radius: 4px;
             transition: all 0.2s;
+            cursor: pointer;
         }
 
         .list-item:hover {
@@ -184,11 +310,6 @@
             text-decoration: none;
             color: inherit;
             display: block;
-        }
-
-        .list-item {
-            transition: 0.2s ease;
-            cursor: pointer;
         }
 
         .hotel-link:hover .list-item {
@@ -237,37 +358,62 @@
             background: #0056b3;
         }
 
-        .btn-delete {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 8px 14px;
-            background: transparent;
-            color: #dc3545;
-            border: 1px solid #dc3545;
-            border-radius: 4px;
-            font-size: 13px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-family: 'Inter', sans-serif;
-            white-space: nowrap;
-        }
-
-        .btn-delete:hover {
-            background: #dc3545;
-            color: #fff;
-        }
-
-        .btn-delete i {
-            font-size: 16px;
-        }
-
-        .item-actions {
+        /* ── Booking Card Extras ── */
+        .property-card-dates {
             display: flex;
             align-items: center;
-            gap: 16px;
-            flex-shrink: 0;
+            gap: 5px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 10px;
+        }
+
+        .property-card-dates i {
+            font-size: 15px;
+            color: var(--secondary-blue);
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.3px;
+            text-transform: uppercase;
+        }
+
+        .status-badge.confirmed {
+            background: #e6f9ee;
+            color: #1a8a4a;
+        }
+
+        .status-badge.pending {
+            background: #fff4e5;
+            color: #b8860b;
+        }
+
+        .btn-view {
+            background: var(--secondary-blue);
+            color: #fff;
+            border-radius: 0 0 12px 12px;
+            width: 100%;
+        }
+
+        .btn-view:hover {
+            background: #0056b3;
+        }
+
+        /* ── Card fade-out animation on delete ── */
+        @keyframes cardFadeOut {
+            to {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+        }
+
+        .property-card.removing {
+            animation: cardFadeOut 0.3s ease forwards;
         }
 
         @media (max-width: 600px) {
@@ -283,6 +429,10 @@
             .tab-btn {
                 width: 100%;
                 text-align: left;
+            }
+
+            .property-grid {
+                grid-template-columns: 1fr;
             }
         }
     </style>
@@ -316,99 +466,121 @@
                 <button class="tab-btn" onclick="openTab(event, 'booked')">Booked Properties</button>
             </div>
 
-            
             <!-- Listed Properties Tab -->
             <div id="listed" class="tab-content active">
-                <% if (typeof listedProperties !=='undefined' && listedProperties.length> 0) { %>
+                <% if (typeof listedProperties !=='undefined' && listedProperties.length > 0) { %>
 
-                    <div class="item-list">
+                    <div class="property-grid">
+                        <% listedProperties.forEach(hotel => { %>
 
-                        <% listedProperties.forEach(hotel=> { %>
+                            <div class="property-card" data-hotel-id="<%= hotel._id %>">
+                                <a href="/hotel/<%= hotel._id %>" class="property-card-link">
+                                    <% if (hotel.photos && hotel.photos.length > 0) { %>
+                                        <img class="property-card-img" src="<%= hotel.photos[0] %>" alt="<%= hotel.hotelName %>" />
+                                    <% } else { %>
+                                        <div class="property-card-img" style="display:flex;align-items:center;justify-content:center;">
+                                            <i class="material-icons-outlined" style="font-size:48px;color:#bbb;">apartment</i>
+                                        </div>
+                                    <% } %>
 
-                            <a href="/hotel/<%= hotel._id %>" class="hotel-link">
-
-                                <div class="list-item">
-
-                                    <div class="item-main">
-                                        <h3>
-                                            <%= hotel.hotelName %>
-                                        </h3>
-
-                                        <p>
-                                            <i class="material-icons-outlined" style="font-size: 16px;">
-                                                location_on
-                                            </i>
-
+                                    <div class="property-card-body">
+                                        <h3><%= hotel.hotelName %></h3>
+                                        <p class="property-card-location">
+                                            <i class="material-icons-outlined">location_on</i>
                                             <%= hotel.location %>
                                         </p>
-                                    </div>
-
-                                    <div class="item-actions">
-                                        <div class="item-price">
-                                            ₹<%= hotel.price %> / night
+                                        <div class="property-card-price">
+                                            ₹<%= hotel.price %> <span>/ night</span>
                                         </div>
-                                        <button class="btn-delete" onclick="deleteProperty(event, '<%= hotel._id %>')">
-                                            <i class="material-icons-outlined">delete</i>
-                                            Delete
-                                        </button>
                                     </div>
+                                </a>
 
+                                <div class="property-card-actions">
+                                    <a href="/hotel/<%= hotel._id %>" class="btn-card btn-edit">
+                                        <i class="material-icons-outlined">edit</i>
+                                        Edit
+                                    </a>
+                                    <button class="btn-card btn-card-delete" onclick="deleteProperty(event, '<%= hotel._id %>')">
+                                        <i class="material-icons-outlined">delete</i>
+                                        Delete
+                                    </button>
                                 </div>
+                            </div>
 
-                            </a>
-
-                            <% }); %>
-
+                        <% }); %>
                     </div>
 
-                    <% } else { %>
+                <% } else { %>
 
-                        <div class="empty-state">
-                            <i class="material-icons-outlined">business</i>
+                    <div class="empty-state">
+                        <i class="material-icons-outlined">business</i>
+                        <p>You haven't listed any properties yet.</p>
+                        <a href="/add-property" class="btn-action">
+                            List your property
+                        </a>
+                    </div>
 
-                            <p>You haven't listed any properties yet.</p>
-
-                            <a href="/add-property" class="btn-action">
-                                List your property
-                            </a>
-                        </div>
-
-                        <% } %>
+                <% } %>
             </div>
 
             <!-- Booked Properties Tab -->
             <div id="booked" class="tab-content">
-                <% if (typeof bookedProperties !=='undefined' && bookedProperties.length> 0) { %>
-                    <div class="item-list">
-                        <% bookedProperties.forEach(hotel=> { %>
-                        <a href="/hotel/<%= hotel.hotel_id %>" class="hotel-link">
-                            <div class="list-item">
-                                <div class="item-main">
-                                    <h3>
-                                        <%= hotel.hotelName || 'Property Booking' %>
-                                    </h3>
-                                    <p><i class="material-icons-outlined" style="font-size: 16px;">event</i>
-                                        <%= new Date(hotel.checkin).toLocaleDateString() %> — <%= new
-                                                Date(hotel.checkout).toLocaleDateString() %>
-                                    </p>
-                                </div>
-                                <div
-                                    class="item-price <%= (hotel.status || 'Confirmed') === 'Confirmed' ? 'status-confirmed' : '' %>">
-                                    <%= hotel.status || 'Confirmed' %>
+                <% if (typeof bookedProperties !=='undefined' && bookedProperties.length > 0) { %>
+
+                    <div class="property-grid">
+                        <% bookedProperties.forEach(hotel => { %>
+
+                            <div class="property-card">
+                                <a href="/hotel/<%= hotel.hotel_id %>" class="property-card-link">
+                                    <% if (hotel.hotelPhotos && hotel.hotelPhotos.length > 0) { %>
+                                        <img class="property-card-img" src="<%= hotel.hotelPhotos[0] %>" alt="<%= hotel.hotelName || 'Hotel' %>" />
+                                    <% } else { %>
+                                        <div class="property-card-img" style="display:flex;align-items:center;justify-content:center;">
+                                            <i class="material-icons-outlined" style="font-size:48px;color:#bbb;">apartment</i>
+                                        </div>
+                                    <% } %>
+
+                                    <div class="property-card-body">
+                                        <h3><%= hotel.hotelName || 'Property Booking' %></h3>
+                                        <p class="property-card-location">
+                                            <i class="material-icons-outlined">location_on</i>
+                                            <%= hotel.hotelLocation || hotel.location || 'N/A' %>
+                                        </p>
+                                        <p class="property-card-dates">
+                                            <i class="material-icons-outlined">event</i>
+                                            <%= new Date(hotel.checkin).toLocaleDateString() %> — <%= new Date(hotel.checkout).toLocaleDateString() %>
+                                        </p>
+                                        <% if (hotel.hotelPrice) { %>
+                                            <div class="property-card-price">
+                                                ₹<%= hotel.hotelPrice %> <span>/ night</span>
+                                            </div>
+                                        <% } %>
+                                        <span class="status-badge <%= (hotel.status || 'Confirmed') === 'Confirmed' ? 'confirmed' : 'pending' %>">
+                                            <%= hotel.status || 'Confirmed' %>
+                                        </span>
+                                    </div>
+                                </a>
+
+                                <div class="property-card-actions">
+                                    <a href="/hotel/<%= hotel.hotel_id %>" class="btn-card btn-view">
+                                        <i class="material-icons-outlined">visibility</i>
+                                        View
+                                    </a>
                                 </div>
                             </div>
-                            <% }); %>
+
+                        <% }); %>
                     </div>
-                    <% } else { %>
-                        <div class="empty-state">
-                            <i class="material-icons-outlined">event_busy</i>
-                            <p>No bookings found.</p>
-                            <a href="/" class="btn-action">Start searching</a>
-                        
-                        </div>
-                        
-                        <% } %>
-                    </a>
+
+                <% } else { %>
+
+                    <div class="empty-state">
+                        <i class="material-icons-outlined">event_busy</i>
+                        <p>No bookings found.</p>
+                        <a href="/" class="btn-action">Start searching</a>
+                    </div>
+
+                <% } %>
             </div>
         </section>
     </main>
@@ -422,21 +594,27 @@
                 return;
             }
 
+            var card = document.querySelector('.property-card[data-hotel-id="' + hotelId + '"]');
+
             fetch('/delete-property/' + hotelId, { method: 'DELETE' })
                 .then(function (res) {
                     if (res.ok) {
-                        var link = event.target.closest('.hotel-link');
-                        var list = link.parentElement;
-                        link.remove();
+                        if (card) {
+                            card.classList.add('removing');
+                            setTimeout(function () {
+                                var grid = card.parentElement;
+                                card.remove();
 
-                        if (list.children.length === 0) {
-                            var tab = document.getElementById('listed');
-                            tab.innerHTML =
-                                '<div class="empty-state">' +
-                                '<i class="material-icons-outlined">business</i>' +
-                                '<p>You haven\'t listed any properties yet.</p>' +
-                                '<a href="/add-property" class="btn-action">List your property</a>' +
-                                '</div>';
+                                if (grid && grid.children.length === 0) {
+                                    var tab = document.getElementById('listed');
+                                    tab.innerHTML =
+                                        '<div class="empty-state">' +
+                                        '<i class="material-icons-outlined">business</i>' +
+                                        '<p>You haven\'t listed any properties yet.</p>' +
+                                        '<a href="/add-property" class="btn-action">List your property</a>' +
+                                        '</div>';
+                                }
+                            }, 300);
                         }
                     } else {
                         alert('Failed to delete property. Please try again.');
@@ -465,4 +643,4 @@
     </script>
 </body>
 
-</html>
+</html>

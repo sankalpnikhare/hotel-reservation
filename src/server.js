@@ -415,9 +415,28 @@ app.get('/profile', authtoken, async (req, res) => {
         ownerid: ownerid
     });
 
-    const bookedProperties = await bookingmodel.find({
+    const rawBookings = await bookingmodel.find({
         userEmail: req.session.user.email
     });
+
+    // Enrich bookings with hotel photos for the card UI
+    const bookedProperties = await Promise.all(
+        rawBookings.map(async (booking) => {
+            const bookingObj = booking.toObject();
+            try {
+                const hotel = await hotelModel.findById(booking.hotel_id);
+                if (hotel) {
+                    bookingObj.hotelPhotos = hotel.photos || [];
+                    bookingObj.hotelLocation = hotel.location || booking.location || '';
+                    bookingObj.hotelPrice = hotel.price || null;
+                }
+            } catch (e) {
+                bookingObj.hotelPhotos = [];
+                bookingObj.hotelLocation = booking.location || '';
+            }
+            return bookingObj;
+        })
+    );
 
     res.render('profile', {
         user: req.session.user,

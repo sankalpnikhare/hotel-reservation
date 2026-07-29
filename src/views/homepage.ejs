@@ -34,7 +34,7 @@
         /* ── Header & Navbar ── */
         .header {
             background-color: var(--primary-blue);
-            padding: 12px 20px 48px;
+            padding: 16px 20px 140px;
             color: #fff;
         }
 
@@ -44,7 +44,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 40px;
+            margin-bottom: 64px;
         }
 
         .logo {
@@ -88,16 +88,17 @@
         }
 
         .header-content h1 {
-            font-size: 48px;
-            font-weight: 700;
-            margin-bottom: 8px;
+            font-size: 52px;
+            font-weight: 800;
+            margin-bottom: 12px;
+            line-height: 1.15;
         }
 
         .header-content p {
             font-size: 24px;
             font-weight: 400;
-            margin-bottom: 32px;
-            opacity: 0.9;
+            margin-bottom: 0;
+            opacity: 0.85;
         }
 
         /* ── Profile Dropdown ── */
@@ -190,8 +191,10 @@
         /* ── Search Bar ── */
         .search-container {
             max-width: 1100px;
-            margin: -32px auto 0;
+            margin: -36px auto 0;
             padding: 0 20px;
+            position: relative;
+            z-index: 10;
         }
 
         .search-bar {
@@ -241,21 +244,276 @@
             cursor: pointer;
         }
 
-        .date-inputs {
+        /* ── Location Dropdown ── */
+        .location-field {
+            position: relative;
+        }
+
+        .location-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            right: 0;
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            margin-top: 8px;
+            display: none;
+            z-index: 1000;
+            padding: 8px 0;
+            min-width: 320px;
+        }
+
+        .location-field.active .location-dropdown {
+            display: block;
+        }
+
+        .dropdown-section-title {
+            font-size: 13px;
+            font-weight: 700;
+            color: var(--text-main);
+            padding: 8px 16px 4px;
+        }
+
+        .location-item {
             display: flex;
             align-items: center;
-            width: 100%;
-            gap: 4px;
+            gap: 14px;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: background 0.2s;
+            text-align: left;
         }
 
-        .date-inputs input[type="date"] {
-            flex: 1;
-            font-size: 13px;
+        .location-item:hover {
+            background: #f5f5f5;
         }
 
-        .date-separator {
-            color: #ccc;
+        .location-item i {
+            font-size: 20px;
+            color: var(--text-muted);
+        }
+
+        .location-details {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .location-details .city {
             font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+            line-height: 1.2;
+        }
+
+        .location-details .country {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.2;
+        }
+
+        /* ── Date Field & Calendar Dropdown ── */
+        .date-field {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .date-field-trigger {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            text-align: left;
+        }
+
+        .date-field-trigger .label {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .date-field-trigger .value {
+            font-size: 14px;
+            color: var(--text-main);
+            font-weight: 600;
+            padding: 1px 0 0;
+            white-space: nowrap;
+        }
+
+        .calendar-dropdown {
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #fff;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            border: 1px solid var(--border-color);
+            margin-top: 8px;
+            display: none;
+            z-index: 1000;
+            padding: 24px;
+            width: 700px;
+        }
+
+        .date-field.active .calendar-dropdown {
+            display: block;
+        }
+
+        .calendar-tabs {
+            display: flex;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 20px;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .calendar-tab {
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            border: none;
+            background: none;
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .calendar-tab.active {
+            color: var(--secondary-blue);
+            border-bottom: 2px solid var(--secondary-blue);
+        }
+
+        .months-container {
+            display: flex;
+            gap: 32px;
+            position: relative;
+        }
+
+        .month-view {
+            flex: 1;
+        }
+
+        .month-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 700;
+            font-size: 16px;
+            color: var(--text-main);
+            margin-bottom: 16px;
+            height: 24px;
+        }
+
+        .month-title {
+            width: 100%;
+            text-align: center;
+        }
+
+        .nav-arrow {
+            cursor: pointer;
+            color: var(--text-main);
+            background: none;
+            border: none;
+            font-size: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            transition: background 0.2s;
+        }
+
+        .nav-arrow:hover {
+            background: #f0f0f0;
+        }
+
+        .weekdays-row {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            text-align: center;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .days-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            row-gap: 4px;
+            text-align: center;
+        }
+
+        .day-cell {
+            aspect-ratio: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 500;
+            color: var(--text-main);
+            cursor: pointer;
+            user-select: none;
+            position: relative;
+            z-index: 1;
+        }
+
+        .day-cell.empty {
+            cursor: default;
+        }
+
+        .day-cell.disabled {
+            color: #ccc;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        .day-cell.start-date {
+            background-color: var(--secondary-blue) !important;
+            color: #fff !important;
+            border-radius: 4px;
+        }
+
+        .day-cell.end-date {
+            background-color: var(--secondary-blue) !important;
+            color: #fff !important;
+            border-radius: 4px;
+        }
+
+        .day-cell.in-range {
+            background-color: #f2f6fa;
+            border-radius: 0;
+        }
+
+        .day-cell:not(.empty):not(.disabled):not(.start-date):not(.end-date):hover {
+            background-color: #f0f0f0;
+            border-radius: 4px;
+        }
+
+        .day-cell.in-range:hover {
+            background-color: #e5edf5;
+        }
+
+        @media (max-width: 768px) {
+            .calendar-dropdown {
+                width: 100%;
+                left: 0;
+                transform: none;
+                padding: 16px;
+            }
+
+            .months-container {
+                flex-direction: column;
+                gap: 20px;
+            }
+
+            .month-view:last-child {
+                display: none;
+            }
         }
 
         .guest-trigger {
@@ -285,7 +543,7 @@
         /* ── Property Types Section ── */
         .main-content {
             max-width: 1100px;
-            margin: 60px auto;
+            margin: 56px auto;
             padding: 0 20px;
         }
 
@@ -465,24 +723,124 @@
         <div class="search-container">
             <form class="search-bar" action="/hotels" method="GET" id="search-form">
                 <!-- Location -->
-                <div class="search-field">
+                <div class="search-field location-field" id="location-field">
                     <span class="material-icons-outlined">bed</span>
-                    <select name="location" required>
-                        <option value="" disabled selected>Where are you going?</option>
-                        <option value="Nagpur, India">Nagpur, India</option>
-                        <option value="Gondia, India">Gondia, India</option>
-                        <option value="Wardha, India">Wardha, India</option>
-                        <option value="Mumbai, India">Mumbai, India</option>
-                    </select>
+                    <div class="input-wrapper" style="display: flex; flex-direction: column; width: 100%; text-align: left;">
+                        <span style="font-size: 11px; color: var(--text-muted); font-weight: 500; margin-bottom: 1px;">Enter destination</span>
+                        <input type="text" name="location" id="location-input" placeholder="Where are you going?" autocomplete="off" required style="border: none; outline: none; width: 100%; font-family: inherit; font-size: 14px; color: var(--text-main); font-weight: 600; padding: 1px 0 0; background: transparent; cursor: pointer;">
+                    </div>
+                    <div class="location-dropdown" id="location-dropdown">
+                        <div class="dropdown-section-title">Trending destinations</div>
+                        <div class="location-item" data-value="Mumbai, India">
+                            <i class="material-icons-outlined">place</i>
+                            <div class="location-details">
+                                <span class="city">Mumbai</span>
+                                <span class="country">India</span>
+                            </div>
+                        </div>
+                        <div class="location-item" data-value="Pune, India">
+                            <i class="material-icons-outlined">place</i>
+                            <div class="location-details">
+                                <span class="city">Pune</span>
+                                <span class="country">India</span>
+                            </div>
+                        </div>
+                        <div class="location-item" data-value="New Delhi, India">
+                            <i class="material-icons-outlined">place</i>
+                            <div class="location-details">
+                                <span class="city">New Delhi</span>
+                                <span class="country">India</span>
+                            </div>
+                        </div>
+                        <div class="location-item" data-value="Lonavala, India">
+                            <i class="material-icons-outlined">place</i>
+                            <div class="location-details">
+                                <span class="city">Lonavala</span>
+                                <span class="country">India</span>
+                            </div>
+                        </div>
+                        <div class="location-item" data-value="Bangalore, India">
+                            <i class="material-icons-outlined">place</i>
+                            <div class="location-details">
+                                <span class="city">Bangalore</span>
+                                <span class="country">India</span>
+                            </div>
+                        </div>
+                        <div class="location-item" data-value="Nagpur, India">
+                            <i class="material-icons-outlined">place</i>
+                            <div class="location-details">
+                                <span class="city">Nagpur</span>
+                                <span class="country">India</span>
+                            </div>
+                        </div>
+                        <div class="location-item" data-value="Gondia, India">
+                            <i class="material-icons-outlined">place</i>
+                            <div class="location-details">
+                                <span class="city">Gondia</span>
+                                <span class="country">India</span>
+                            </div>
+                        </div>
+                        <div class="location-item" data-value="Wardha, India">
+                            <i class="material-icons-outlined">place</i>
+                            <div class="location-details">
+                                <span class="city">Wardha</span>
+                                <span class="country">India</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
                 <!-- Dates -->
-                <div class="search-field">
+                <div class="search-field date-field" id="date-field">
                     <span class="material-icons-outlined">calendar_today</span>
-                    <div class="date-inputs">
-                        <input type="date" name="checkin" required title="Check-in date">
-                        <span class="date-separator">—</span>
-                        <input type="date" name="checkout" required title="Check-out date">
+                    <div class="date-field-trigger" id="date-field-trigger">
+                        <span class="label">Select dates</span>
+                        <span class="value" id="date-display-text">Select check-in and check-out dates</span>
+                    </div>
+
+                    <!-- Hidden inputs for checkin/checkout selection -->
+                    <input type="hidden" name="checkin" id="checkin-input-hidden" required>
+                    <input type="hidden" name="checkout" id="checkout-input-hidden" required>
+
+                    <!-- Calendar Dropdown -->
+                    <div class="calendar-dropdown" id="calendar-dropdown">
+                        <div class="calendar-tabs">
+                            <button type="button" class="calendar-tab active">Calendar</button>
+                            <button type="button" class="calendar-tab">I'm flexible</button>
+                        </div>
+                        <div class="months-container" style="position: relative;">
+                            <!-- Previous arrow -->
+                            <button type="button" class="nav-arrow" id="prev-month-btn" style="position: absolute; left: 0; top: 0; z-index: 5;">
+                                <i class="material-icons-outlined">chevron_left</i>
+                            </button>
+
+                            <!-- Month 1 -->
+                            <div class="month-view" id="month-1-view">
+                                <div class="month-header">
+                                    <div class="month-title" id="month-1-title"></div>
+                                </div>
+                                <div class="weekdays-row">
+                                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                                </div>
+                                <div class="days-grid" id="month-1-days"></div>
+                            </div>
+
+                            <!-- Month 2 -->
+                            <div class="month-view" id="month-2-view">
+                                <div class="month-header">
+                                    <div class="month-title" id="month-2-title"></div>
+                                </div>
+                                <div class="weekdays-row">
+                                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                                </div>
+                                <div class="days-grid" id="month-2-days"></div>
+                            </div>
+
+                            <!-- Next arrow -->
+                            <button type="button" class="nav-arrow" id="next-month-btn" style="position: absolute; right: 0; top: 0; z-index: 5;">
+                                <i class="material-icons-outlined">chevron_right</i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -565,24 +923,285 @@
             alert("Please log in first");
         }
 
+        // Location Dropdown Logic
+        const locationField = document.getElementById('location-field');
+        const locationInput = document.getElementById('location-input');
+        const locationDropdown = document.getElementById('location-dropdown');
+        const locationItems = document.querySelectorAll('.location-item');
+
+        locationInput.addEventListener('click', (e) => {
+            e.stopPropagation();
+            guestField.classList.remove('active');
+            locationField.classList.add('active');
+        });
+
+        locationInput.addEventListener('focus', (e) => {
+            e.stopPropagation();
+            guestField.classList.remove('active');
+            locationField.classList.add('active');
+        });
+
+        locationInput.addEventListener('input', () => {
+            const query = locationInput.value.toLowerCase().trim();
+            locationItems.forEach(item => {
+                const value = item.getAttribute('data-value').toLowerCase();
+                if (value.includes(query)) {
+                    item.style.display = 'flex';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+
+        locationItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.stopPropagation();
+                locationInput.value = item.getAttribute('data-value');
+                locationField.classList.remove('active');
+            });
+        });
+
         guestTrigger.addEventListener('click', (e) => {
             e.stopPropagation();
+            locationField.classList.remove('active');
             guestField.classList.toggle('active');
         });
 
         document.addEventListener('click', () => {
             guestField.classList.remove('active');
+            locationField.classList.remove('active');
+            dateField.classList.remove('active');
         });
 
         document.querySelector('.guest-dropdown').addEventListener('click', (e) => {
             e.stopPropagation();
         });
 
+        // Calendar Logic
+        const dateField = document.getElementById('date-field');
+        const dateTrigger = document.getElementById('date-field-trigger');
+        const dateDisplayText = document.getElementById('date-display-text');
+        const checkinHidden = document.getElementById('checkin-input-hidden');
+        const checkoutHidden = document.getElementById('checkout-input-hidden');
+        const calendarDropdown = document.getElementById('calendar-dropdown');
+
+        const today = new Date();
+        today.setHours(0,0,0,0);
+
+        let checkInDate = null;
+        let checkOutDate = null;
+        let hoveredDate = null;
+
+        let displayLeftMonth = new Date(2026, 6, 1); // July 2026
+
+        function setupCalendar() {
+            // Set inputs initial values
+            checkinHidden.value = '';
+            checkoutHidden.value = '';
+            updateDateDisplay();
+
+            // Setup tab listeners
+            const calendarTabs = document.querySelectorAll('.calendar-tab');
+            calendarTabs.forEach(tab => {
+                tab.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    calendarTabs.forEach(t => t.classList.remove('active'));
+                    tab.classList.add('active');
+                });
+            });
+
+            // Prevent dropdown clicks from propagating
+            calendarDropdown.addEventListener('click', (e) => {
+                e.stopPropagation();
+            });
+
+            // Date field trigger click
+            dateTrigger.addEventListener('click', (e) => {
+                e.stopPropagation();
+                locationField.classList.remove('active');
+                guestField.classList.remove('active');
+                dateField.classList.toggle('active');
+                renderCalendar();
+            });
+
+            // Month navigation arrow click listeners
+            document.getElementById('prev-month-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                displayLeftMonth.setMonth(displayLeftMonth.getMonth() - 1);
+                renderCalendar();
+            });
+
+            document.getElementById('next-month-btn').addEventListener('click', (e) => {
+                e.stopPropagation();
+                displayLeftMonth.setMonth(displayLeftMonth.getMonth() + 1);
+                renderCalendar();
+            });
+
+            // Clear highlights when mouse leaves the calendar area
+            document.querySelector('.months-container').addEventListener('mouseleave', () => {
+                if (checkInDate && !checkOutDate) {
+                    hoveredDate = null;
+                    updateRangeHighlights();
+                }
+            });
+
+            renderCalendar();
+        }
+
+        function renderCalendar() {
+            const leftMonth = displayLeftMonth;
+            const rightMonth = new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1);
+
+            renderMonth(leftMonth, 'month-1-title', 'month-1-days');
+            renderMonth(rightMonth, 'month-2-title', 'month-2-days');
+            updateNavButtons();
+        }
+
+        function updateRangeHighlights() {
+            const cells = document.querySelectorAll('.day-cell[data-time]');
+            cells.forEach(cell => {
+                const cellTime = parseInt(cell.dataset.time);
+                if (checkInDate && !checkOutDate && hoveredDate) {
+                    if (cellTime > checkInDate.getTime() && cellTime <= hoveredDate.getTime()) {
+                        cell.classList.add('in-range');
+                    } else {
+                        cell.classList.remove('in-range');
+                    }
+                } else if (checkInDate && checkOutDate) {
+                    if (cellTime > checkInDate.getTime() && cellTime < checkOutDate.getTime()) {
+                        cell.classList.add('in-range');
+                    } else {
+                        cell.classList.remove('in-range');
+                    }
+                } else {
+                    cell.classList.remove('in-range');
+                }
+            });
+        }
+
+        function renderMonth(monthDate, titleId, gridId) {
+            const year = monthDate.getFullYear();
+            const month = monthDate.getMonth();
+
+            const titleEl = document.getElementById(titleId);
+            const gridEl = document.getElementById(gridId);
+
+            const monthName = monthDate.toLocaleString('default', { month: 'long' });
+            titleEl.textContent = `${monthName} ${year}`;
+
+            gridEl.innerHTML = '';
+
+            const firstDay = new Date(year, month, 1).getDay();
+            const totalDays = new Date(year, month + 1, 0).getDate();
+
+            // Empty cells before the first day
+            for (let i = 0; i < firstDay; i++) {
+                const cell = document.createElement('div');
+                cell.className = 'day-cell empty';
+                gridEl.appendChild(cell);
+            }
+
+            // Days of the month
+            for (let day = 1; day <= totalDays; day++) {
+                const date = new Date(year, month, day);
+                const cell = document.createElement('div');
+                cell.className = 'day-cell';
+                cell.textContent = day;
+
+                const time = date.getTime();
+                const todayTime = today.getTime();
+                cell.dataset.time = time;
+
+                if (time < todayTime) {
+                    cell.classList.add('disabled');
+                } else {
+                    if (checkInDate && time === checkInDate.getTime()) {
+                        cell.classList.add('start-date');
+                    } else if (checkOutDate && time === checkOutDate.getTime()) {
+                        cell.classList.add('end-date');
+                    } else if (checkInDate && checkOutDate && time > checkInDate.getTime() && time < checkOutDate.getTime()) {
+                        cell.classList.add('in-range');
+                    } else if (checkInDate && !checkOutDate && hoveredDate && time > checkInDate.getTime() && time <= hoveredDate.getTime()) {
+                        cell.classList.add('in-range');
+                    }
+
+                    cell.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        if (!checkInDate || checkOutDate) {
+                            checkInDate = date;
+                            checkOutDate = null;
+                            updateRangeHighlights();
+                            updateDateDisplay();
+                            renderCalendar();
+                        } else if (checkInDate && !checkOutDate) {
+                            if (time < checkInDate.getTime()) {
+                                checkInDate = date;
+                                updateRangeHighlights();
+                                updateDateDisplay();
+                                renderCalendar();
+                            } else {
+                                checkOutDate = date;
+                                checkinHidden.value = formatDateForInput(checkInDate);
+                                checkoutHidden.value = formatDateForInput(checkOutDate);
+                                updateDateDisplay();
+                                renderCalendar();
+                                dateField.classList.remove('active');
+                            }
+                        }
+                    });
+
+                    cell.addEventListener('mouseenter', () => {
+                        if (checkInDate && !checkOutDate) {
+                            hoveredDate = date;
+                            updateRangeHighlights();
+                        }
+                    });
+                }
+
+                gridEl.appendChild(cell);
+            }
+        }
+
+        function updateNavButtons() {
+            const prevBtn = document.getElementById('prev-month-btn');
+            const currentMonthFirst = new Date(today.getFullYear(), today.getMonth(), 1);
+            if (displayLeftMonth.getTime() <= currentMonthFirst.getTime()) {
+                prevBtn.style.visibility = 'hidden';
+            } else {
+                prevBtn.style.visibility = 'visible';
+            }
+        }
+
+        function updateDateDisplay() {
+            if (checkInDate && checkOutDate) {
+                dateDisplayText.textContent = `${formatShortDate(checkInDate)} — ${formatShortDate(checkOutDate)}`;
+            } else if (checkInDate) {
+                dateDisplayText.textContent = `${formatShortDate(checkInDate)} — Check-out date`;
+            } else {
+                dateDisplayText.textContent = 'Select check-in and check-out dates';
+            }
+        }
+
+        function formatShortDate(date) {
+            const options = { weekday: 'short', month: 'short', day: 'numeric' };
+            return date.toLocaleDateString('en-US', options);
+        }
+
+        function formatDateForInput(date) {
+            if (!date) return '';
+            const yyyy = date.getFullYear();
+            const mm = String(date.getMonth() + 1).padStart(2, '0');
+            const dd = String(date.getDate()).padStart(2, '0');
+            return `${yyyy}-${mm}-${dd}`;
+        }
+
         function setupStepper(id, min, max, onChange) {
             const display = document.getElementById(id + '-count');
             const input = document.getElementById(id + '-input');
             const minus = document.getElementById(id + '-minus');
             const plus = document.getElementById(id + '-plus');
+
+            display.textContent = input.value; // Sync UI count with input value
 
             minus.addEventListener('click', () => {
                 let val = parseInt(display.textContent);
@@ -614,15 +1233,7 @@
         setupStepper('adults', 1, 10, updateGuestText);
         setupStepper('rooms', 1, 10, updateGuestText);
 
-        // Date selection logic: ensure checkout is after checkin
-        const checkinInput = document.querySelector('input[name="checkin"]');
-        const checkoutInput = document.querySelector('input[name="checkout"]');
-
-        checkinInput.addEventListener('change', () => {
-            if (checkinInput.value) {
-                checkoutInput.min = checkinInput.value;
-            }
-        });
+        setupCalendar();
     </script>
 </body>
 
