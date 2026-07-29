@@ -58,7 +58,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 
 mongodb_connect();
 app.use((req, res, next) => {
-    res.locals.user = req.session.name || null;
+    res.locals.user = req.session.user || null;
     next();
 });
 
@@ -100,16 +100,24 @@ app.post('/register', async (req, res) => {
     req.session.otp = otp;
 
     await sendMail(email, "Code", `Your OTP is ${otp}`);
+    // if(sendMail){
+    //     console.log("Otp sent !!!");
+
+    // }
+    console.log(sendMail);
+
 
     return res.redirect('/otp');
 });
 
 
 app.get('/otp', (req, res) => {
+
     if (!req.session.user) {
         return res.send("Unauthorized");
     }
     res.render('otp');
+
 });
 
 
@@ -125,22 +133,26 @@ app.post('/otp', async (req, res) => {
     await create_user(
         req.session.user.name,
         req.session.user.email,
-        req.session.user.password,
+        hashed,
         userid
     );
 
     const payload = {
         name: req.session.user.name,
         email: req.session.user.email,
-        
+        ownerid: userid
     };
 
-    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY)
+    const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
 
     req.session.token = token;
 
+    req.session.user = {
+        name: req.session.user.name,
+        email: req.session.user.email,
+        userid: userid
+    };
 
-    
     req.session.otp = null;
 
     return res.redirect('/homepage');
@@ -173,20 +185,24 @@ app.post('/login', async (req, res) => {
         const payload = {
             name: user.name,
             email: user.email,
-            ownerid:user.userid
+            ownerid: user.userid
         };
 
         const token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
-        req.session.name = user.name;
-        req.session.email = user.email;
-        req.session.userid =  user.userid 
 
         req.session.token = token;
+
+        req.session.user = {
+            name: user.name,
+            email: user.email,
+            userid: user.userid
+        };
 
         return res.redirect('/homepage');
 
     } catch (err) {
-        return res.status(500).send("Error")
+        console.error(err);
+        return res.status(500).send("Error");
     }
 });
 
@@ -196,8 +212,6 @@ app.post('/login', async (req, res) => {
 
 app.get('/homepage', (req, res) => {
     res.render('homepage');
-
-
 });
 
 app.post('/search', (req, res) => {
@@ -213,14 +227,14 @@ app.get('/add-user', (req, res) => {
 app.post('/add-user', async (req, res) => {
     try {
         const { name, email, password } = req.body;
-        const userid = nanoid(); 
-        
-        
-       
+        const userid = nanoid();
 
 
-        const add = await create_user(name, email, password , userid);
-        res.redirect('/') ; 
+
+
+
+        const add = await create_user(name, email, password, userid);
+        res.redirect('/');
     } catch (err) {
         return res.status(500).send("Error")
     }
@@ -234,12 +248,12 @@ app.get('/add-property', authtoken, (req, res) => {
 
 app.get('/hotels', async (req, res) => {
     const location = req.query.location;
-    
+
     req.session.rooms = req.query.rooms;
     req.session.adults = req.query.adults;
     req.session.checkin = req.query.checkin;
     req.session.checkout = req.query.checkout;
-    
+
 
 
 
@@ -269,8 +283,8 @@ app.post('/add-property', upload.array('hotelPhotos', 4), async (req, res) => {
         const ownername = req.session.name;
         const user = await check_email(req.session.email);
         const ownerid = user.userid;
-        
-        
+
+
 
 
 
@@ -287,12 +301,12 @@ app.post('/add-property', upload.array('hotelPhotos', 4), async (req, res) => {
             photos: imagePaths
 
         })
-        
-        
+
+
         await newHotel.save();
 
         res.send("Property added successfully")
-        
+
     } catch (err) {
 
         res.status(500).send("Error");
@@ -306,7 +320,7 @@ app.get('/hotel/:id', async (req, res) => {
     try {
         const hotel = await hotelModel.findOne({ _id: req.params.id });
         req.session.hotelid = req.params.id;
-        
+
 
         if (!hotel) {
             return res.status(404).send("Hotel not found");
@@ -323,16 +337,16 @@ app.get('/hotel/:id', async (req, res) => {
 app.post('/reserve', async (req, res) => {
 
     try {
-        const hotelid = req.body.hotelid;   
-       
-        
+        const hotelid = req.body.hotelid;
+
+
 
 
         const hotel = await hotelModel.find({ _id: hotelid });
-        const hotelName = hotel[0].hotelName ; 
-        const hotellocation = hotel[0].location ; 
-        
-        
+        const hotelName = hotel[0].hotelName;
+        const hotellocation = hotel[0].location;
+
+
 
 
         const ownerid = hotel[0].ownerid;
@@ -342,19 +356,19 @@ app.post('/reserve', async (req, res) => {
 
 
         const owneremail = owner[0].email;
-       
+
 
 
         const newBooking = new bookingmodel({
             userEmail: req.session.email,
             hotelName,
-            location : hotellocation, 
+            location: hotellocation,
             rooms: req.body.rooms,
             people: req.body.adults,
             checkin: new Date(req.body.checkin),
             checkout: new Date(req.body.checkout),
             status: "Confirmed",
-            hotel_id:hotelid
+            hotel_id: hotelid
         });
         await newBooking.save();
         await sendMail(
@@ -364,7 +378,7 @@ app.post('/reserve', async (req, res) => {
   <h2>New Booking Request</h2>
 
   <p><strong>Name:</strong> ${req.body.name}</p>
-  <p><strong>Email:</strong> ${req.body.email}</p>  ////Sending the email
+  <p><strong>Email:</strong> ${req.body.email}</p>  
 
   <hr>
 
@@ -393,16 +407,23 @@ app.post('/reserve', async (req, res) => {
 
 })
 
-app.get('/profile' , authtoken , async(req,res)=>{
-    const ownerid = req.session.userid ; 
-    
+app.get('/profile', authtoken, async (req, res) => {
 
+    const ownerid = req.session.user.userid;
 
-    const listedProperties = await hotelModel.find({ownerid:ownerid})
-    const useremail = req.session.email ;
-    
-    const bookedProperties = await bookingmodel.find({userEmail : useremail})
-    res.render('profile' , {listedProperties , bookedProperties})
+    const listedProperties = await hotelModel.find({
+        ownerid: ownerid
+    });
+
+    const bookedProperties = await bookingmodel.find({
+        userEmail: req.session.user.email
+    });
+
+    res.render('profile', {
+        user: req.session.user,
+        listedProperties,
+        bookedProperties
+    });
 });
 
 app.delete('/delete-property/:id', authtoken, async (req, res) => {
@@ -426,7 +447,7 @@ app.delete('/delete-property/:id', authtoken, async (req, res) => {
         res.status(500).send("Error deleting property");
     }
 });
- 
+
 app.get('/logout', (req, res) => {
     req.session.destroy((err) => {
         if (err) {
