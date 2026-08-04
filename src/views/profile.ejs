@@ -416,6 +416,127 @@
             animation: cardFadeOut 0.3s ease forwards;
         }
 
+        /* ── Host Dashboard Styles ── */
+        .dashboard-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+        
+        .stat-card {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 24px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(0, 53, 128, 0.08);
+        }
+        
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+        }
+        
+        .stat-icon.properties { background: linear-gradient(135deg, #006ce4, #003580); }
+        .stat-icon.bookings { background: linear-gradient(135deg, #28a745, #1e7e34); }
+        .stat-icon.revenue { background: linear-gradient(135deg, #fd7e14, #d9534f); }
+        .stat-icon.rooms { background: linear-gradient(135deg, #6f42c1, #563d7c); }
+        
+        .stat-icon i {
+            font-size: 24px;
+        }
+        
+        .stat-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .stat-value {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+        
+        .stat-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-top: 2px;
+        }
+        
+        .dashboard-section {
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 28px;
+            margin-bottom: 32px;
+        }
+        
+        .dashboard-section h2 {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .table-responsive {
+            overflow-x: auto;
+        }
+        
+        .booking-table {
+            width: 100%;
+            border-collapse: collapse;
+            text-align: left;
+            font-size: 14px;
+        }
+        
+        .booking-table th {
+            background-color: #f8fafc;
+            color: var(--text-muted);
+            font-weight: 600;
+            padding: 14px 16px;
+            border-bottom: 2px solid var(--border-color);
+        }
+        
+        .booking-table td {
+            padding: 14px 16px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-main);
+        }
+        
+        .booking-table tr:hover {
+            background-color: #f8fafc;
+        }
+        
+        .booking-guest {
+            font-weight: 500;
+        }
+        
+        .booking-hotel {
+            color: var(--secondary-blue);
+            font-weight: 600;
+        }
+        
+        .booking-revenue {
+            font-weight: 700;
+        }
+
         @media (max-width: 600px) {
             .user-card {
                 flex-direction: column;
@@ -462,12 +583,121 @@
 
         <section class="tabs-container">
             <div class="tabs-header">
-                <button class="tab-btn active" onclick="openTab(event, 'listed')">Listed Properties</button>
+                <% if (typeof dashboardStats !== 'undefined' && dashboardStats !== null) { %>
+                    <button class="tab-btn active" onclick="openTab(event, 'dashboard')">Host Dashboard</button>
+                    <button class="tab-btn" onclick="openTab(event, 'listed')">Listed Properties</button>
+                <% } else { %>
+                    <button class="tab-btn active" onclick="openTab(event, 'listed')">Listed Properties</button>
+                <% } %>
                 <button class="tab-btn" onclick="openTab(event, 'booked')">Booked Properties</button>
             </div>
 
-            <!-- Listed Properties Tab -->
-            <div id="listed" class="tab-content active">
+            <% if (typeof dashboardStats !== 'undefined' && dashboardStats !== null) { %>
+                <!-- Host Dashboard Tab -->
+                <div id="dashboard" class="tab-content active">
+                    <div class="dashboard-stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-icon properties">
+                                <i class="material-icons-outlined">business</i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value"><%= dashboardStats.totalProperties %></span>
+                                <span class="stat-label">Listed Properties</span>
+                            </div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-icon bookings">
+                                <i class="material-icons-outlined">book_online</i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value"><%= dashboardStats.totalBookings %></span>
+                                <span class="stat-label">Bookings Received</span>
+                            </div>
+                        </div>
+                        <!--
+                        <div class="stat-card">
+                            <div class="stat-icon revenue">
+                                <i class="material-icons-outlined">payments</i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value">₹<%= dashboardStats.totalRevenue.toLocaleString('en-IN') %></span>
+                                <span class="stat-label">Est. Revenue</span>
+                            </div>
+                        </div>
+                        -->
+                        <div class="stat-card">
+                            <div class="stat-icon rooms">
+                                <i class="material-icons-outlined">meeting_room</i>
+                            </div>
+                            <div class="stat-info">
+                                <span class="stat-value"><%= dashboardStats.totalRoomsBooked %></span>
+                                <span class="stat-label">Rooms Booked</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-section">
+                        <h2>
+                            <i class="material-icons-outlined">history</i>
+                            Recent Property Bookings
+                        </h2>
+                        <% if (typeof hostBookings !== 'undefined' && hostBookings.length > 0) { %>
+                            <div class="table-responsive">
+                                <table class="booking-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Guest</th>
+                                            <th>Property</th>
+                                            <th>Check-in / Check-out</th>
+                                            <th>Details</th>
+                                            <th>Revenue</th>
+                                            <th>Status</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <% hostBookings.forEach(booking => { %>
+                                            <tr>
+                                                <td class="booking-guest">
+                                                    <%= booking.userEmail %>
+                                                </td>
+                                                <td class="booking-hotel">
+                                                    <%= booking.hotelName %>
+                                                </td>
+                                                <td>
+                                                    <%= new Date(booking.checkin).toLocaleDateString() %> — <%= new Date(booking.checkout).toLocaleDateString() %>
+                                                    <span style="color: var(--text-muted); font-size: 12px; display: block;">(<%= booking.nights %> <%= booking.nights === 1 ? 'night' : 'nights' %>)</span>
+                                                </td>
+                                                <td>
+                                                    <%= booking.rooms %> <%= booking.rooms === 1 ? 'room' : 'rooms' %> / <%= booking.people %> <%= booking.people === 1 ? 'guest' : 'guests' %>
+                                                </td>
+                                                <td class="booking-revenue">
+                                                    ₹<%= booking.revenue.toLocaleString('en-IN') %>
+                                                </td>
+                                                <td>
+                                                    <span class="status-badge <%= (booking.status || 'Confirmed') === 'Confirmed' ? 'confirmed' : 'pending' %>">
+                                                        <%= booking.status || 'Confirmed' %>
+                                                    </span>
+                                                </td>
+                                            </tr>
+                                        <% }); %>
+                                    </tbody>
+                                </table>
+                            </div>
+                        <% } else { %>
+                            <div class="empty-state">
+                                <i class="material-icons-outlined">receipt_long</i>
+                                <p>No bookings received for your properties yet.</p>
+                            </div>
+                        <% } %>
+                    </div>
+                </div>
+
+                <!-- Listed Properties Tab -->
+                <div id="listed" class="tab-content">
+            <% } else { %>
+                <!-- Listed Properties Tab -->
+                <div id="listed" class="tab-content active">
+            <% } %>
                 <% if (typeof listedProperties !=='undefined' && listedProperties.length > 0) { %>
 
                     <div class="property-grid">
@@ -599,23 +829,7 @@
             fetch('/delete-property/' + hotelId, { method: 'DELETE' })
                 .then(function (res) {
                     if (res.ok) {
-                        if (card) {
-                            card.classList.add('removing');
-                            setTimeout(function () {
-                                var grid = card.parentElement;
-                                card.remove();
-
-                                if (grid && grid.children.length === 0) {
-                                    var tab = document.getElementById('listed');
-                                    tab.innerHTML =
-                                        '<div class="empty-state">' +
-                                        '<i class="material-icons-outlined">business</i>' +
-                                        '<p>You haven\'t listed any properties yet.</p>' +
-                                        '<a href="/add-property" class="btn-action">List your property</a>' +
-                                        '</div>';
-                                }
-                            }, 300);
-                        }
+                        window.location.reload();
                     } else {
                         alert('Failed to delete property. Please try again.');
                     }
