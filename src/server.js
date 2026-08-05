@@ -248,6 +248,8 @@ app.get('/add-property', authtoken, (req, res) => {
 
 app.get('/hotels', async (req, res) => {
     const location = req.query.location;
+    const minPrice = req.query.minPrice !== undefined && req.query.minPrice !== '' ? Number(req.query.minPrice) : null;
+    const maxPrice = req.query.maxPrice !== undefined && req.query.maxPrice !== '' ? Number(req.query.maxPrice) : null;
 
     req.session.rooms = req.query.rooms;
     req.session.adults = req.query.adults;
@@ -260,11 +262,23 @@ app.get('/hotels', async (req, res) => {
 
 
     try {
-        const hotels = await hotelModel.find({
+        const query = {
             location: { $regex: location, $options: 'i' }
-        });
+        };
 
-        res.render('hotels', { hotels, location });
+        const priceFilter = {};
+        if (minPrice != null && !isNaN(minPrice)) priceFilter.$gte = minPrice;
+        if (maxPrice != null && !isNaN(maxPrice)) priceFilter.$lte = maxPrice;
+        if (Object.keys(priceFilter).length) query.price = priceFilter;
+
+        const hotels = await hotelModel.find(query);
+
+        res.render('hotels', {
+            hotels,
+            location,
+            minPrice: req.query.minPrice || '',
+            maxPrice: req.query.maxPrice || ''
+        });
     } catch (err) {
         return res.send("There was an error ")
     }

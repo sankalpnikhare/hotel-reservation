@@ -93,6 +93,112 @@
             background-color: #fff;
         }
 
+        .results-layout {
+            display: grid;
+            grid-template-columns: 260px 1fr;
+            gap: 24px;
+            align-items: start;
+        }
+
+        .filters-sidebar {
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            position: sticky;
+            top: 20px;
+        }
+
+        .filters-sidebar h2 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 10px;
+            color: var(--text-main);
+        }
+
+        .price-inputs {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .price-inputs input {
+            flex: 1;
+            min-width: 0;
+            padding: 8px 10px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 14px;
+        }
+
+        .price-inputs span {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .price-presets {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-bottom: 16px;
+        }
+
+        .price-preset {
+            display: block;
+            padding: 8px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 4px;
+            font-size: 13px;
+            color: var(--text-main);
+            text-decoration: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        .price-preset:hover,
+        .price-preset.active {
+            border-color: var(--secondary-blue);
+            background: #f0f6ff;
+            color: var(--secondary-blue);
+        }
+
+        .btn-apply {
+            width: 100%;
+            padding: 10px;
+            background: var(--secondary-blue);
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .btn-apply:hover {
+            background: var(--primary-blue);
+        }
+
+        .btn-clear {
+            display: block;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 13px;
+            color: var(--secondary-blue);
+            text-decoration: none;
+        }
+
+        .btn-clear:hover {
+            text-decoration: underline;
+        }
+
         .hotel-list {
             display: flex;
             flex-direction: column;
@@ -207,6 +313,14 @@
 
         /* Mobile */
         @media (max-width: 768px) {
+            .results-layout {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-sidebar {
+                position: static;
+            }
+
             .hotel-card {
                 flex-direction: column;
             }
@@ -241,7 +355,38 @@
 
     <main class="main-content">
         <div class="container">
-            <div class="hotel-list">
+            <div class="results-layout">
+                <aside class="filters-sidebar">
+                    <h2>Filter by</h2>
+                    <form method="GET" action="/hotels" id="price-filter-form">
+                        <input type="hidden" name="location" value="<%= location %>">
+                        <div class="filter-group">
+                            <label for="minPrice">Your budget (per night)</label>
+                            <div class="price-inputs">
+                                <input type="number" id="minPrice" name="minPrice" placeholder="Min ₹"
+                                    min="0" value="<%= minPrice %>">
+                                <span>—</span>
+                                <input type="number" id="maxPrice" name="maxPrice" placeholder="Max ₹"
+                                    min="0" value="<%= maxPrice %>">
+                            </div>
+                            <div class="price-presets">
+                                <a href="/hotels?location=<%= encodeURIComponent(location) %>&maxPrice=2000"
+                                    class="price-preset <%= maxPrice == '2000' && !minPrice ? 'active' : '' %>">Under ₹2,000</a>
+                                <a href="/hotels?location=<%= encodeURIComponent(location) %>&minPrice=2000&maxPrice=5000"
+                                    class="price-preset <%= minPrice == '2000' && maxPrice == '5000' ? 'active' : '' %>">₹2,000 – ₹5,000</a>
+                                <a href="/hotels?location=<%= encodeURIComponent(location) %>&minPrice=5000&maxPrice=10000"
+                                    class="price-preset <%= minPrice == '5000' && maxPrice == '10000' ? 'active' : '' %>">₹5,000 – ₹10,000</a>
+                                <a href="/hotels?location=<%= encodeURIComponent(location) %>&minPrice=10000"
+                                    class="price-preset <%= minPrice == '10000' && !maxPrice ? 'active' : '' %>">₹10,000+</a>
+                            </div>
+                            <button type="submit" class="btn-apply">Apply filter</button>
+                            <% if (minPrice || maxPrice) { %>
+                                <a href="/hotels?location=<%= encodeURIComponent(location) %>" class="btn-clear">Clear price filter</a>
+                            <% } %>
+                        </div>
+                    </form>
+                </aside>
+                <div class="hotel-list">
                 <% if (hotels && hotels.length> 0) { %>
                     <% hotels.forEach(hotel=> { %>
                         <a href="/hotel/<%= hotel._id %>" class="hotel-card">
@@ -275,12 +420,17 @@
                             <% } else { %>
                                 <div class="no-results">
                                     <i class="material-icons-outlined">search_off</i>
-                                    <h2>No properties found in <%= location %>
-                                    </h2>
-                                    <p>Try searching for a different destination or check your spelling.</p>
-                                    <a href="/" class="btn-view" style="margin-top: 20px;">Search again</a>
+                                    <h2>No properties found in <%= location %></h2>
+                                    <% if (minPrice || maxPrice) { %>
+                                        <p>No hotels match your price range. Try adjusting the filter or search again.</p>
+                                        <a href="/hotels?location=<%= encodeURIComponent(location) %>" class="btn-view" style="margin-top: 20px;">Clear price filter</a>
+                                    <% } else { %>
+                                        <p>Try searching for a different destination or check your spelling.</p>
+                                        <a href="/" class="btn-view" style="margin-top: 20px;">Search again</a>
+                                    <% } %>
                                 </div>
                                 <% } %>
+                </div>
             </div>
         </div>
     </main>
