@@ -60,8 +60,8 @@ passport.use(
             clientSecret: process.env.GOOGLE_CLIENT_SECRET,
             callbackURL: "http://localhost:5000/auth/google/callback"
         },
-        (acessToken, refreshToken , profile , done ) =>{
-            return (null , profile)
+        (accessToken, refreshToken, profile, done) => {
+            return done(null, profile);
         }
     )
 )
@@ -96,7 +96,9 @@ app.get('/', (req, res) => {
 app.get('/register', (req, res) => {
     res.render('register');
 })
-
+app.get('/auth/google' , (req,res)=>{
+    
+})
 
 app.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
@@ -180,6 +182,46 @@ app.post('/otp', async (req, res) => {
 app.get('/login', (req, res) => {
     res.render('login');
 });
+
+app.get('/auth/google',
+    passport.authenticate('google', { scope: ['email', 'profile'] })
+);
+
+app.get('/auth/google/callback',
+    passport.authenticate('google', { failureRedirect: '/login' }),
+    async (req, res) => {
+        try {
+            const profile = req.user;
+            const email = profile.emails[0].value;
+            const name = profile.displayName;
+
+            let user = await check_email(email);
+            if (!user) {
+                const userid = nanoid();
+                await create_user(name, email, nanoid(32), userid);
+                user = await check_email(email);
+            }
+
+            const payload = {
+                name: user.name,
+                email: user.email,
+                ownerid: user.userid
+            };
+
+            req.session.token = jwt.sign(payload, process.env.JWT_SECRET_KEY);
+            req.session.user = {
+                name: user.name,
+                email: user.email,
+                userid: user.userid
+            };
+
+            return res.redirect('/homepage');
+        } catch (err) {
+            console.error(err);
+            return res.redirect('/login');
+        }
+    }
+);
 
 
 app.post('/login', async (req, res) => {
