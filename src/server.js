@@ -1,6 +1,8 @@
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 dotenv.config();
+const passport = require("passport");
+const GoogleStrategy = require("passport-google-oauth2").Strategy;
 
 const express = require('express');
 const mongodb_connect = require('./db/db');
@@ -49,6 +51,8 @@ app.use(session({
         httpOnly: true
     }
 }));
+app.use(passport.initialize());
+app.use(passport.session());
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
