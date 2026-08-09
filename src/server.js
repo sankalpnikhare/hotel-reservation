@@ -53,6 +53,20 @@ app.use(session({
 }));
 app.use(passport.initialize());
 app.use(passport.session());
+passport.use(
+    new GoogleStrategy(
+        {
+            clientID: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            callbackURL: "http://localhost:5000/auth/google/callback"
+        },
+        (acessToken, refreshToken , profile , done ) =>{
+            return (null , profile)
+        }
+    )
+)
+passport.serializeUser((user,done)=>done(null,user));
+passport.deserializeUser((user,done)=>done(null,user));
 app.set('view engine', 'ejs');
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
