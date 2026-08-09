@@ -96,9 +96,6 @@ app.get('/', (req, res) => {
 app.get('/register', (req, res) => {
     res.render('register');
 })
-app.get('/auth/google' , (req,res)=>{
-    
-})
 
 app.post('/register', async (req, res) => {
     const { name, email, password } = req.body;
@@ -192,14 +189,26 @@ app.get('/auth/google/callback',
     async (req, res) => {
         try {
             const profile = req.user;
-            const email = profile.emails[0].value;
-            const name = profile.displayName;
+            const email = profile.emails?.[0]?.value || profile.email;
+            const name = profile.displayName || profile.name?.givenName || 'Google User';
+
+            if (!email) {
+                return res.redirect('/login');
+            }
 
             let user = await check_email(email);
             if (!user) {
                 const userid = nanoid();
-                await create_user(name, email, nanoid(32), userid);
+                const created = await create_user(name, email, null, userid);
+                if (!created) {
+                    console.error('Google OAuth: failed to create user for', email);
+                    return res.redirect('/login');
+                }
                 user = await check_email(email);
+            }
+
+            if (!user) {
+                return res.redirect('/login');
             }
 
             const payload = {

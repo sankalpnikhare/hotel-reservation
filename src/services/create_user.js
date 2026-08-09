@@ -9,22 +9,25 @@ const hash_password = require('./hash_password.js');
 
 
 
-async function create_user( name , email , password, userid ){
-   
-    if(!name || !email ||!password ||!userid ){
-        return false ;
+async function create_user(name, email, password, userid) {
+
+    if (!name || !email || !userid) {
+        return false;
     }
-    const hash = await hash_password(password);
 
-    const data = await usermodel.create({
-        name:name ,
-        email:email ,
-        password:hash,
-        userid:userid
+    const userData = {
+        name,
+        email,
+        userid
+    };
 
-    })
+    if (password) {
+        userData.password = await hash_password(password);
+    }
 
-    return true ;
+    await usermodel.create(userData);
+
+    return true;
 
 
 }
