@@ -117,10 +117,8 @@ app.post('/register', async (req, res) => {
     req.session.otp = otp;
 
     await sendMail(email, "Code", `Your OTP is ${otp}`);
-    // if(sendMail){
-    //     console.log("Otp sent !!!");
+    
 
-    // }
     console.log(sendMail);
 
 
@@ -486,7 +484,7 @@ app.get('/profile', authtoken, async (req, res) => {
         userEmail: req.session.user.email
     });
 
-    // Enrich bookings with hotel photos for the card UI
+   
     const bookedProperties = await Promise.all(
         rawBookings.map(async (booking) => {
             const bookingObj = booking.toObject();
@@ -505,7 +503,7 @@ app.get('/profile', authtoken, async (req, res) => {
         })
     );
 
-    // Calculate dashboard statistics if the user has listed properties
+    
     let dashboardStats = null;
     let hostBookings = [];
 
@@ -591,3 +589,8 @@ app.get('/logout', (req, res) => {
 app.listen(5000, () => {
     console.log(`Server listening at port 5000`);
 });
+
+
+
+const sampleroute = require('./controllers/sample');
+app.use(sampleroute) ; 
