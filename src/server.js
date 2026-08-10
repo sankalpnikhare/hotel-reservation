@@ -288,27 +288,11 @@ app.post('/search', (req, res) => {
     res.render('search')
 
 })
+if (process.env.NODE_ENV !== "production") {
+    const devRoutes = require("./routes/dev_routes");
+    app.use(devRoutes);
+}
 
-app.get('/add-user', (req, res) => {
-    res.render('add-user');
-})
-
-app.post('/add-user', async (req, res) => {
-    try {
-        const { name, email, password } = req.body;
-        const userid = nanoid();
-
-
-
-
-
-        const add = await create_user(name, email, password, userid);
-        res.redirect('/');
-    } catch (err) {
-        return res.status(500).send("Error")
-    }
-
-})
 
 
 app.get('/add-property', authtoken, (req, res) => {
