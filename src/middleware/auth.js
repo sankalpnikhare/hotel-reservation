@@ -8,7 +8,7 @@ const authtoken = (req,res,next) =>{
         if(!token){
             return res.send("Unauthorized : No token");
         }
-        const decoded = jwt.verify(token , process.env. JWT_SECRET_KEY);
+        const decoded = jwt.verify(token , process.env.JWT_SECRET_KEY);
         req.user= decoded ;
         next();
     }catch(err){

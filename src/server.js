@@ -263,7 +263,7 @@ app.post('/login', async (req, res) => {
 
         req.session.user = {
             name: user.name,
-            email: user.email,
+            email: user.email,        
             userid: user.userid
         };
 
