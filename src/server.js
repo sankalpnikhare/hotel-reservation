@@ -592,5 +592,3 @@ app.listen(5000, () => {
 
 
 
-const sampleroute = require('./controllers/sample');
-app.use(sampleroute) ; 
