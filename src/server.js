@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
-const dotenv = require('dotenv');
-dotenv.config();
+const dotenv = require('dotenv').config();
+// dotenv.config();
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth2").Strategy;
 
