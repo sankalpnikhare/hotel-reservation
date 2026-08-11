@@ -8,9 +8,7 @@ const bookingmodel = require("../db/model/bookingmodel");
 const sendMail = require("../services/sendMail");
 
 
-// =========================
-// RESERVE HOTEL
-// =========================
+
 
 router.post(
     "/reserve",

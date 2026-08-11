@@ -13,18 +13,13 @@ const hash_password = require("../services/hash_password");
 const check_password = require("../services/check_password");
 
 
-// =========================
-// REGISTER PAGE
-// =========================
 
 router.get("/register", (req, res) => {
     res.render("register");
 });
 
 
-// =========================
-// REGISTER
-// =========================
+
 
 router.post("/register", async (req, res) => {
 
@@ -77,9 +72,7 @@ router.post("/register", async (req, res) => {
 });
 
 
-// =========================
-// OTP PAGE
-// =========================
+
 
 router.get("/otp", (req, res) => {
 
@@ -91,9 +84,6 @@ router.get("/otp", (req, res) => {
 });
 
 
-// =========================
-// OTP VERIFICATION
-// =========================
 
 router.post("/otp", async (req, res) => {
 
@@ -151,18 +141,14 @@ router.post("/otp", async (req, res) => {
 });
 
 
-// =========================
-// LOGIN PAGE
-// =========================
+
 
 router.get("/login", (req, res) => {
     res.render("login");
 });
 
 
-// =========================
-// NORMAL LOGIN
-// =========================
+
 
 router.post("/login", async (req, res) => {
 
@@ -219,9 +205,6 @@ router.post("/login", async (req, res) => {
 });
 
 
-// =========================
-// GOOGLE LOGIN
-// =========================
 
 router.get(
     "/auth/google",
@@ -231,9 +214,6 @@ router.get(
 );
 
 
-// =========================
-// GOOGLE CALLBACK
-// =========================
 
 router.get(
     "/auth/google/callback",
@@ -321,9 +301,7 @@ router.get(
 );
 
 
-// =========================
-// LOGOUT
-// =========================
+
 
 router.get("/logout", (req, res) => {
 

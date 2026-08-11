@@ -7,9 +7,7 @@ const bookingmodel = require("../db/model/bookingmodel");
 const authtoken = require("../middleware/auth");
 
 
-// =========================
-// PROFILE
-// =========================
+
 
 router.get(
     "/profile",
@@ -24,9 +22,7 @@ router.get(
                 req.session.user.userid;
 
 
-            // =========================
-            // USER'S PROPERTIES
-            // =========================
+            
 
             const listedProperties =
                 await hotelModel.find({
@@ -34,9 +30,7 @@ router.get(
                 });
 
 
-            // =========================
-            // USER'S BOOKINGS
-            // =========================
+            
 
             const rawBookings =
                 await bookingmodel.find({
@@ -99,9 +93,7 @@ router.get(
                 );
 
 
-            // =========================
-            // HOST DASHBOARD
-            // =========================
+            
 
             let dashboardStats = null;
 
@@ -245,9 +237,7 @@ router.get(
             }
 
 
-            // =========================
-            // RENDER PROFILE
-            // =========================
+            
 
             res.render(
                 "profile",

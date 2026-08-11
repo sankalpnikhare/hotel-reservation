@@ -13,9 +13,6 @@ const mongodb_connect =
     require("./db/db");
 
 
-// =========================
-// ROUTES
-// =========================
 
 const authRoutes =
     require("./routes/auth_routes");
@@ -33,16 +30,12 @@ const userRoutes =
     require("./routes/user_routes");
 
 
-// =========================
-// APP
-// =========================
+
 
 const app = express();
 
 
-// =========================
-// SESSION
-// =========================
+
 
 app.use(
     session({
@@ -66,9 +59,6 @@ app.use(
 );
 
 
-// =========================
-// PASSPORT
-// =========================
 
 app.use(
     passport.initialize()
@@ -126,9 +116,7 @@ passport.deserializeUser(
 );
 
 
-// =========================
-// EXPRESS SETTINGS
-// =========================
+
 
 app.set(
     "view engine",
@@ -148,9 +136,7 @@ app.use(
 );
 
 
-// =========================
-// STATIC FILES
-// =========================
+
 
 app.use(
     express.static(
@@ -170,16 +156,12 @@ app.use(
 );
 
 
-// =========================
-// DATABASE
-// =========================
+
 
 mongodb_connect();
 
 
-// =========================
-// GLOBAL VARIABLES
-// =========================
+
 
 app.use(
     (req, res, next) => {
@@ -199,9 +181,7 @@ app.use(
 );
 
 
-// =========================
-// ROUTES
-// =========================
+
 
 app.use(authRoutes);
 
@@ -214,9 +194,7 @@ app.use(bookingRoutes);
 app.use(userRoutes);
 
 
-// =========================
-// DEVELOPMENT ROUTES
-// =========================
+
 
 if (
     process.env.NODE_ENV !== "production"
@@ -230,9 +208,6 @@ if (
 }
 
 
-// =========================
-// SERVER
-// =========================
 
 app.listen(
     5000,

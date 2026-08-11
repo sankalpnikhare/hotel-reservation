@@ -11,9 +11,7 @@ const check_email = require("../config/check_email");
 const authtoken = require("../middleware/auth");
 
 
-// =========================
-// MULTER STORAGE
-// =========================
+
 
 const storage = multer.diskStorage({
 
@@ -42,10 +40,6 @@ const upload = multer({
 });
 
 
-// =========================
-// ADD PROPERTY PAGE
-// =========================
-
 router.get(
     "/add-property",
     authtoken,
@@ -57,9 +51,7 @@ router.get(
 );
 
 
-// =========================
-// GET HOTELS
-// =========================
+
 
 router.get(
     "/hotels",
@@ -163,9 +155,6 @@ router.get(
 );
 
 
-// =========================
-// ADD PROPERTY
-// =========================
 
 router.post(
     "/add-property",
@@ -253,9 +242,6 @@ router.post(
 );
 
 
-// =========================
-// HOTEL DETAILS
-// =========================
 
 router.get(
     "/hotel/:id",
@@ -310,9 +296,6 @@ router.get(
 );
 
 
-// =========================
-// DELETE PROPERTY
-// =========================
 
 router.delete(
     "/delete-property/:id",
