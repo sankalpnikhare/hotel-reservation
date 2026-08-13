@@ -233,13 +233,7 @@ router.post(
 
             
 
-            // res.render(`/hotel/${savedhotel._id}`)
-            // res.render('homepage');
-            // console.log(savedhotel._id);
             
-            // res.send(
-            //     "Property added successfully"
-            // );
 
 
         } catch (err) {
