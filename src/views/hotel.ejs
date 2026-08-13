@@ -315,19 +315,41 @@
         document.getElementById('rooms-plus').addEventListener('click', () => updateRooms(1));
 
         function previewImage(input, slotId) {
-            const slot = document.getElementById(slotId);
-            if (input.files && input.files[0]) {
-                const reader = new FileReader();
-                reader.onload = function (e) {
-                    const existingImg = slot.querySelector('img');
-                    if (existingImg) existingImg.remove();
-                    const img = document.createElement('img');
-                    img.src = e.target.result;
-                    slot.appendChild(img);
-                }
-                reader.readAsDataURL(input.files[0]);
-            }
-        }
+
+    const slot = document.getElementById(slotId);
+
+    if (!input.files || !input.files[0]) {
+        return;
+    }
+
+    const file = input.files[0];
+
+    // Make sure it is an image
+    if (!file.type.startsWith("image/")) {
+        alert("Please select an image file.");
+        input.value = "";
+        return;
+    }
+
+    // Remove old preview
+    const oldImage = slot.querySelector("img");
+
+    if (oldImage) {
+        URL.revokeObjectURL(oldImage.src);
+        oldImage.remove();
+    }
+
+    // Create image preview
+    const img = document.createElement("img");
+
+    img.src = URL.createObjectURL(file);
+
+    img.onload = function () {
+        URL.revokeObjectURL(img.src);
+    };
+
+    slot.appendChild(img);
+}
     </script>
 </body>
 

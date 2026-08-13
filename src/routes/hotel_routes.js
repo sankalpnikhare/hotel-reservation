@@ -9,6 +9,8 @@ const hotelModel = require("../db/model/hotelmodel");
 const check_email = require("../config/check_email");
 
 const authtoken = require("../middleware/auth");
+const { log } = require("console");
+const { STATUS_CODES } = require("http");
 
 
 
@@ -220,12 +222,24 @@ router.post(
                 });
 
 
-            await newHotel.save();
+            const savedhotel = await newHotel.save();
+            try{
+                if(savedhotel){
+                    res.redirect(`hotel/${savedhotel._id}`)
+                } 
+                }catch (err){
+                    res.send('SOmething wrong occured')
+            }
 
+            
 
-            res.send(
-                "Property added successfully"
-            );
+            // res.render(`/hotel/${savedhotel._id}`)
+            // res.render('homepage');
+            // console.log(savedhotel._id);
+            
+            // res.send(
+            //     "Property added successfully"
+            // );
 
 
         } catch (err) {
