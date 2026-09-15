@@ -40,7 +40,7 @@ const app = express();
 app.use(
     session({
 
-        secret: "mysecretkey",
+        secret: process.env.SESSION_SECRET_KEY ,
 
         resave: false,
 

@@ -1,5 +1,8 @@
 const express = require("express");
 const router = express.Router();
+const cloudinary = require("cloudinary").v2;
+const { CloudinaryStorage } = require("multer-storage-cloudinary");
+
 
 const multer = require("multer");
 const path = require("path");
@@ -15,32 +18,49 @@ const { STATUS_CODES } = require("http");
 
 
 
-const storage = multer.diskStorage({
+// const storage = multer.diskStorage({
 
-    destination: (req, file, cb) => {
+//     destination: (req, file, cb) => {
 
-        cb(
-            null,
-            "public/uploads/"
-        );
+//         cb(
+//             null,
+//             "public/uploads/"
+//         );
 
-    },
+//     },
 
-    filename: (req, file, cb) => {
+//     filename: (req, file, cb) => {
 
-        cb(
-            null,
-            Date.now() + "-" + file.originalname
-        );
+//         cb(
+//             null,
+//             Date.now() + "-" + file.originalname
+//         );
 
+//     }
+
+// });
+
+
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_API_KEY,
+    api_secret: process.env.CLOUDINARY_API_SECRET
+});
+
+
+
+
+const storage = new CloudinaryStorage({
+    cloudinary: cloudinary,
+    params: {
+        folder: "stayease/hotels",
+        allowed_formats: ["jpg", "jpeg", "png", "webp"]
     }
-
 });
 
 const upload = multer({
     storage: storage
 });
-
 
 router.get(
     "/add-property",
@@ -63,13 +83,13 @@ router.get(
 
         const minPrice =
             req.query.minPrice !== undefined &&
-            req.query.minPrice !== ""
+                req.query.minPrice !== ""
                 ? Number(req.query.minPrice)
                 : null;
 
         const maxPrice =
             req.query.maxPrice !== undefined &&
-            req.query.maxPrice !== ""
+                req.query.maxPrice !== ""
                 ? Number(req.query.maxPrice)
                 : null;
 
@@ -161,14 +181,13 @@ router.get(
 router.post(
     "/add-property",
 
-    upload.array(
-        "hotelPhotos",
-        4
-    ),
+    upload.array("hotelPhotos", 4),
 
     async (req, res) => {
 
         try {
+
+            
 
             const {
                 hotelName,
@@ -178,70 +197,50 @@ router.post(
                 price
             } = req.body;
 
+            const imagePaths = req.files.map(file => file.path);
 
-            const imagePaths =
-                req.files.map(
-                    file =>
-                        `/uploads/${file.filename}`
-                );
+            
 
+            const ownername = req.session.user.name;
+            const owneremail = req.session.user.email;
 
-            // Use the logged-in user
-            const ownername =
-                req.session.user.name;
+            
 
-            const owneremail =
-                req.session.user.email;
+            const user = await check_email(owneremail);
 
-            const user =
-                await check_email(owneremail);
+            
 
-            const ownerid =
-                user.userid;
+            const ownerid = user.userid;
 
+            
 
-            const newHotel =
-                new hotelModel({
+            const newHotel = new hotelModel({
 
-                    ownername,
+                ownername,
+                ownerid,
+                hotelName,
+                location,
+                address,
+                price,
+                totalRooms,
+                photos: imagePaths
 
-                    ownerid,
+            });
 
-                    hotelName,
-
-                    location,
-
-                    address,
-
-                    price,
-
-                    totalRooms,
-
-                    photos: imagePaths
-
-                });
-
+            
 
             const savedhotel = await newHotel.save();
-            try{
-                if(savedhotel){
-                    res.redirect(`hotel/${savedhotel._id}`)
-                } 
-                }catch (err){
-                    res.send('SOmething wrong occured')
-            }
 
             
 
-            
-
+            res.redirect(`/hotel/${savedhotel._id}`);
 
         } catch (err) {
 
-            console.error(err);
+            console.error("ADD HOTEL ERROR:", err);
 
             res.status(500).send(
-                "Error"
+                "Error adding hotel: " + err.message
             );
 
         }
