@@ -12,6 +12,7 @@ router.post("/add-user", async (req, res) => {
     try {
         const { name, email, password } = req.body;
         const userid = nanoid();
+        
 
         await create_user(name, email, password, userid);
 
