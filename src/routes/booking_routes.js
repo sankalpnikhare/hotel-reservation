@@ -6,12 +6,14 @@ const usermodel = require("../db/model/usermodel");
 const bookingmodel = require("../db/model/bookingmodel");
 
 const sendMail = require("../services/sendMail");
+const authtoken = require("../middleware/auth");
+
 
 
 
 
 router.post(
-    "/reserve",
+    "/reserve",authtoken,
     async (req, res) => {
 
         try {

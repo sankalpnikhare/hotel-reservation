@@ -28,6 +28,7 @@ const bookingRoutes =
 
 const userRoutes =
     require("./routes/user_routes");
+const hash_password = require("./services/hash_password");
 
 
 
@@ -40,7 +41,7 @@ const app = express();
 app.use(
     session({
 
-        secret: process.env.SESSION_SECRET_KEY ,
+        secret: process.env.SESSION_SECRET_KEY,
 
         resave: false,
 
@@ -193,11 +194,18 @@ app.use(bookingRoutes);
 
 app.use(userRoutes);
 
+// (async function () {
+//     const  sankalp_hash = await hash_password("sankalpadmin");
+//     return console.log("Hash:", sankalp_hash);
+
+
+// })(); 
+
 
 
 
 if (
-    process.env.NODE_ENV !== "production"
+    process.env.MODE !== "production"
 ) {
 
     const devRoutes =

@@ -13,7 +13,15 @@ const userschema = mongoose.Schema({
         required:true,
         type:String
     },
-    userid:String
+    userid:String,
+    LoginAttempts:{
+        type:Number,
+        default:0
+    },
+    LoginLockedUntil:{
+        type:Date,
+        default:null
+    }
 })
 
 const usermodel =new  mongoose.model('users',  userschema); 
