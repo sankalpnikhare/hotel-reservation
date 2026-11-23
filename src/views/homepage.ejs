@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -5,9 +6,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>StayEase — Find Your Stay</title>
+
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
         rel="stylesheet" />
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+
     <style>
         :root {
             --primary-blue: #003580;
@@ -16,6 +19,7 @@
             --light-bg: #f5f5f5;
             --text-main: #1a1a1a;
             --text-muted: #4d4d4d;
+            --border-color: #e5e7eb;
         }
 
         * {
@@ -31,7 +35,8 @@
             line-height: 1.5;
         }
 
-        /* ── Header & Navbar ── */
+        /* Header & Navbar */
+
         .header {
             background-color: var(--primary-blue);
             padding: 16px 20px 140px;
@@ -97,11 +102,11 @@
         .header-content p {
             font-size: 24px;
             font-weight: 400;
-            margin-bottom: 0;
             opacity: 0.85;
         }
 
-        /* ── Profile Dropdown ── */
+        /* Profile Dropdown */
+
         .user-dropdown {
             position: relative;
             display: inline-block;
@@ -155,7 +160,6 @@
             left: 0;
             width: 100%;
             height: 8px;
-            background: transparent;
         }
 
         .user-dropdown:hover .dropdown-menu {
@@ -188,7 +192,8 @@
             margin: 4px 0;
         }
 
-        /* ── Search Bar ── */
+        /* Search Bar */
+
         .search-container {
             max-width: 1100px;
             margin: -36px auto 0;
@@ -244,7 +249,8 @@
             cursor: pointer;
         }
 
-        /* ── Location Dropdown ── */
+        /* Location Dropdown */
+
         .location-field {
             position: relative;
         }
@@ -313,7 +319,8 @@
             line-height: 1.2;
         }
 
-        /* ── Date Field & Calendar Dropdown ── */
+        /* Date Field & Calendar */
+
         .date-field {
             position: relative;
             cursor: pointer;
@@ -472,12 +479,7 @@
             text-decoration: line-through;
         }
 
-        .day-cell.start-date {
-            background-color: var(--secondary-blue) !important;
-            color: #fff !important;
-            border-radius: 4px;
-        }
-
+        .day-cell.start-date,
         .day-cell.end-date {
             background-color: var(--secondary-blue) !important;
             color: #fff !important;
@@ -500,7 +502,7 @@
 
         @media (max-width: 768px) {
             .calendar-dropdown {
-                width: 100%;
+                width: min(100%, 420px);
                 left: 0;
                 transform: none;
                 padding: 16px;
@@ -515,6 +517,8 @@
                 display: none;
             }
         }
+
+        /* Guest Dropdown */
 
         .guest-trigger {
             cursor: pointer;
@@ -540,7 +544,8 @@
             background: #0056b3;
         }
 
-        /* ── Property Types Section ── */
+        /* Property Types */
+
         .main-content {
             max-width: 1100px;
             margin: 56px auto;
@@ -578,12 +583,8 @@
             font-weight: 700;
         }
 
-        .property-card p {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
+        /* Guest Dropdown */
 
-        /* ── Guest Dropdown (Simple Version) ── */
         .guest-dropdown {
             position: absolute;
             top: 100%;
@@ -644,6 +645,7 @@
         }
 
         /* Mobile */
+
         @media (max-width: 768px) {
             .navbar {
                 flex-direction: column;
@@ -675,41 +677,60 @@
 </head>
 
 <body>
+
     <header class="header">
         <nav class="navbar">
+
             <a href="/" class="logo">StayEase.com</a>
+
             <div class="nav-actions">
                 <span class="nav-link">INR</span>
-                <span class="nav-link"><i class="material-icons-outlined"
-                        style="font-size: 20px; vertical-align: middle;">help_outline</i></span>
+
+                <span class="nav-link">
+                    <i class="material-icons-outlined"
+                        style="font-size: 20px; vertical-align: middle;">help_outline</i>
+                </span>
+
                 <a href="/add-property" class="nav-link">List your property</a>
+
                 <% if (user) { %>
+
                     <div class="user-dropdown">
                         <div class="user-trigger">
+
                             <div class="avatar">
                                 <%= user.name.charAt(0).toUpperCase() %>
                             </div>
+
                             <span class="nav-link">
                                 <%= user.name %>
                             </span>
-                            <i class="material-icons-outlined" style="font-size: 18px;">expand_more</i>
+
+                            <i class="material-icons-outlined"
+                                style="font-size: 18px;">expand_more</i>
                         </div>
+
                         <div class="dropdown-menu">
                             <a href="/profile" class="dropdown-item">
                                 <i class="material-icons-outlined">person_outline</i>
                                 Profile
                             </a>
+
                             <div class="dropdown-divider"></div>
+
                             <a href="/logout" class="dropdown-item">
                                 <i class="material-icons-outlined">logout</i>
                                 Logout
                             </a>
                         </div>
                     </div>
-                    <% } else { %>
-                        <a href="/register" class="btn-nav">Register</a>
-                        <a href="/login" class="btn-nav">Sign in</a>
-                        <% } %>
+
+                <% } else { %>
+
+                    <a href="/register" class="btn-nav">Register</a>
+                    <a href="/login" class="btn-nav">Sign in</a>
+
+                <% } %>
             </div>
         </nav>
 
@@ -720,155 +741,210 @@
     </header>
 
     <main>
+
         <div class="search-container">
+
             <form class="search-bar" action="/hotels" method="GET" id="search-form">
+
                 <!-- Location -->
+
                 <div class="search-field location-field" id="location-field">
+
                     <span class="material-icons-outlined">bed</span>
-                    <div class="input-wrapper" style="display: flex; flex-direction: column; width: 100%; text-align: left;">
-                        <span style="font-size: 11px; color: var(--text-muted); font-weight: 500; margin-bottom: 1px;">Enter destination</span>
-                        <input type="text" name="location" id="location-input" placeholder="Where are you going?" autocomplete="off" required style="border: none; outline: none; width: 100%; font-family: inherit; font-size: 14px; color: var(--text-main); font-weight: 600; padding: 1px 0 0; background: transparent; cursor: pointer;">
+
+                    <div class="input-wrapper"
+                        style="display: flex; flex-direction: column; width: 100%; text-align: left;">
+
+                        <span
+                            style="font-size: 11px; color: var(--text-muted); font-weight: 500; margin-bottom: 1px;">
+                            Enter destination
+                        </span>
+
+                        <input type="text"
+                            name="location"
+                            id="location-input"
+                            placeholder="Where are you going?"
+                            autocomplete="off"
+                            required
+                            style="border: none; outline: none; width: 100%; font-family: inherit; font-size: 14px; color: var(--text-main); font-weight: 600; padding: 1px 0 0; background: transparent; cursor: pointer;">
                     </div>
+
                     <div class="location-dropdown" id="location-dropdown">
+
                         <div class="dropdown-section-title">Trending destinations</div>
-                        <div class="location-item" data-value="Mumbai, India">
-                            <i class="material-icons-outlined">place</i>
-                            <div class="location-details">
-                                <span class="city">Mumbai</span>
-                                <span class="country">India</span>
+
+                        <% const destinations = [
+                            "Mumbai",
+                            "Pune",
+                            "New Delhi",
+                            "Lonavala",
+                            "Bangalore",
+                            "Nagpur",
+                            "Gondia",
+                            "Wardha"
+                        ]; %>
+
+                        <% destinations.forEach(city => { %>
+
+                            <div class="location-item" data-value="<%= city %>, India">
+                                <i class="material-icons-outlined">place</i>
+
+                                <div class="location-details">
+                                    <span class="city"><%= city %></span>
+                                    <span class="country">India</span>
+                                </div>
                             </div>
-                        </div>
-                        <div class="location-item" data-value="Pune, India">
-                            <i class="material-icons-outlined">place</i>
-                            <div class="location-details">
-                                <span class="city">Pune</span>
-                                <span class="country">India</span>
-                            </div>
-                        </div>
-                        <div class="location-item" data-value="New Delhi, India">
-                            <i class="material-icons-outlined">place</i>
-                            <div class="location-details">
-                                <span class="city">New Delhi</span>
-                                <span class="country">India</span>
-                            </div>
-                        </div>
-                        <div class="location-item" data-value="Lonavala, India">
-                            <i class="material-icons-outlined">place</i>
-                            <div class="location-details">
-                                <span class="city">Lonavala</span>
-                                <span class="country">India</span>
-                            </div>
-                        </div>
-                        <div class="location-item" data-value="Bangalore, India">
-                            <i class="material-icons-outlined">place</i>
-                            <div class="location-details">
-                                <span class="city">Bangalore</span>
-                                <span class="country">India</span>
-                            </div>
-                        </div>
-                        <div class="location-item" data-value="Nagpur, India">
-                            <i class="material-icons-outlined">place</i>
-                            <div class="location-details">
-                                <span class="city">Nagpur</span>
-                                <span class="country">India</span>
-                            </div>
-                        </div>
-                        <div class="location-item" data-value="Gondia, India">
-                            <i class="material-icons-outlined">place</i>
-                            <div class="location-details">
-                                <span class="city">Gondia</span>
-                                <span class="country">India</span>
-                            </div>
-                        </div>
-                        <div class="location-item" data-value="Wardha, India">
-                            <i class="material-icons-outlined">place</i>
-                            <div class="location-details">
-                                <span class="city">Wardha</span>
-                                <span class="country">India</span>
-                            </div>
-                        </div>
+
+                        <% }) %>
+
                     </div>
                 </div>
 
                 <!-- Dates -->
+
                 <div class="search-field date-field" id="date-field">
+
                     <span class="material-icons-outlined">calendar_today</span>
+
                     <div class="date-field-trigger" id="date-field-trigger">
+
                         <span class="label">Select dates</span>
-                        <span class="value" id="date-display-text">Select check-in and check-out dates</span>
+
+                        <span class="value" id="date-display-text">
+                            Select check-in and check-out dates
+                        </span>
+
                     </div>
 
-                    <!-- Hidden inputs for checkin/checkout selection -->
                     <input type="hidden" name="checkin" id="checkin-input-hidden" required>
                     <input type="hidden" name="checkout" id="checkout-input-hidden" required>
 
-                    <!-- Calendar Dropdown -->
+                    <!-- Calendar -->
+
                     <div class="calendar-dropdown" id="calendar-dropdown">
+
                         <div class="calendar-tabs">
-                            <button type="button" class="calendar-tab active">Calendar</button>
-                            <button type="button" class="calendar-tab">I'm flexible</button>
-                        </div>
-                        <div class="months-container" style="position: relative;">
-                            <!-- Previous arrow -->
-                            <button type="button" class="nav-arrow" id="prev-month-btn" style="position: absolute; left: 0; top: 0; z-index: 5;">
-                                <i class="material-icons-outlined">chevron_left</i>
+
+                            <button type="button" class="calendar-tab active">
+                                Calendar
                             </button>
 
-                            <!-- Month 1 -->
+                            <button type="button" class="calendar-tab">
+                                I'm flexible
+                            </button>
+
+                        </div>
+
+                        <div class="months-container" style="position: relative;">
+
+                            <button type="button" class="nav-arrow" id="prev-month-btn"
+                                style="position: absolute; left: 0; top: 0; z-index: 5;">
+
+                                <i class="material-icons-outlined">chevron_left</i>
+
+                            </button>
+
+                            <!-- First month -->
+
                             <div class="month-view" id="month-1-view">
+
                                 <div class="month-header">
                                     <div class="month-title" id="month-1-title"></div>
                                 </div>
+
                                 <div class="weekdays-row">
-                                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                                    <span>Sun</span>
+                                    <span>Mon</span>
+                                    <span>Tue</span>
+                                    <span>Wed</span>
+                                    <span>Thu</span>
+                                    <span>Fri</span>
+                                    <span>Sat</span>
                                 </div>
+
                                 <div class="days-grid" id="month-1-days"></div>
+
                             </div>
 
-                            <!-- Month 2 -->
+                            <!-- Second month -->
+
                             <div class="month-view" id="month-2-view">
+
                                 <div class="month-header">
                                     <div class="month-title" id="month-2-title"></div>
                                 </div>
+
                                 <div class="weekdays-row">
-                                    <span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span>
+                                    <span>Sun</span>
+                                    <span>Mon</span>
+                                    <span>Tue</span>
+                                    <span>Wed</span>
+                                    <span>Thu</span>
+                                    <span>Fri</span>
+                                    <span>Sat</span>
                                 </div>
+
                                 <div class="days-grid" id="month-2-days"></div>
+
                             </div>
 
-                            <!-- Next arrow -->
-                            <button type="button" class="nav-arrow" id="next-month-btn" style="position: absolute; right: 0; top: 0; z-index: 5;">
+                            <button type="button" class="nav-arrow" id="next-month-btn"
+                                style="position: absolute; right: 0; top: 0; z-index: 5;">
+
                                 <i class="material-icons-outlined">chevron_right</i>
+
                             </button>
+
                         </div>
                     </div>
                 </div>
 
                 <!-- Guests -->
+
                 <div class="search-field guest-field" id="guest-field">
+
                     <span class="material-icons-outlined">person</span>
+
                     <div class="guest-trigger" id="guest-trigger">
+
                         <span id="guest-text">2 adults · 1 room</span>
+
                         <span class="material-icons-outlined">expand_more</span>
+
                     </div>
 
                     <div class="guest-dropdown">
+
                         <div class="stepper">
+
                             <span>Adults</span>
+
                             <div class="stepper-controls">
+
                                 <button type="button" class="stepper-btn" id="adults-minus">−</button>
+
                                 <span id="adults-count">2</span>
+
                                 <button type="button" class="stepper-btn" id="adults-plus">+</button>
+
                             </div>
                         </div>
+
                         <div class="stepper">
+
                             <span>Rooms</span>
+
                             <div class="stepper-controls">
+
                                 <button type="button" class="stepper-btn" id="rooms-minus">−</button>
+
                                 <span id="rooms-count">1</span>
+
                                 <button type="button" class="stepper-btn" id="rooms-plus">+</button>
+
                             </div>
                         </div>
+
                     </div>
                 </div>
 
@@ -876,47 +952,75 @@
                 <input type="hidden" name="rooms" id="rooms-input" value="1">
 
                 <button type="submit" class="btn-search">Search</button>
+
             </form>
         </div>
 
+        <!-- Property Types -->
+
         <div class="main-content">
+
             <h2 class="section-title">Browse by property type</h2>
+
             <div class="property-grid">
+
                 <div class="property-card">
-                    <img src="https://cf.bstatic.com/xdata/images/xphoto/square300/57584488.webp?k=bf724e4f9b9b2bb4d21659e2d567545673468f697491321f7c0c57147a67104b&o="
-                        alt="Hotels">
+
+                    <img src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&w=900&q=80"
+                        alt="Hotels"
+                        loading="lazy"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Hotels';">
+
                     <h3>Hotels</h3>
-                    <p>801,429 hotels</p>
+
                 </div>
+
                 <div class="property-card">
-                    <img src="https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-apartments_300/9f60235dc09a3ac3f0a93adbc901c61ecd1ce72e.jpg"
-                        alt="Apartments">
+
+                    <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80"
+                        alt="Apartments"
+                        loading="lazy"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Apartments';">
+
                     <h3>Apartments</h3>
-                    <p>801,429 apartments</p>
+
                 </div>
+
                 <div class="property-card">
-                    <img src="https://cf.bstatic.com/static/img/theme-index/carousel_320x240/bg_resorts/6f87c6143fbd51a0bb5d15ca3b9cf84211ab0884.jpg"
-                        alt="Resorts">
+
+                    <img src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&w=900&q=80"
+                        alt="Resorts"
+                        loading="lazy"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Resorts';">
+
                     <h3>Resorts</h3>
-                    <p>17,422 resorts</p>
+
                 </div>
+
                 <div class="property-card">
-                    <img src="https://cf.bstatic.com/static/img/theme-index/carousel_320x240/card-image-villas_300/dd0d7f8911051039b628d08463d90b5ff05104ed.jpg"
-                        alt="Villas">
+
+                    <img src="https://images.unsplash.com/photo-1613490493576-7fde63acd811?auto=format&fit=crop&w=900&q=80"
+                        alt="Villas"
+                        loading="lazy"
+                        onerror="this.onerror=null; this.src='https://placehold.co/600x400?text=Villas';">
+
                     <h3>Villas</h3>
-                    <p>401,234 villas</p>
+
                 </div>
+
             </div>
         </div>
+
     </main>
 
-    <!-- Basic Date Picker Integration (Optional, using native date for simplicity if preferred) -->
-    <!-- For now, I'll keep it simple with native inputs hidden behind the display -->
     <script>
+
         // Guest Dropdown Logic
+
         const guestField = document.getElementById('guest-field');
         const guestTrigger = document.getElementById('guest-trigger');
         const guestText = document.getElementById('guest-text');
+
         const params = new URLSearchParams(window.location.search);
 
         if (params.get('loginRequired')) {
@@ -924,6 +1028,7 @@
         }
 
         // Location Dropdown Logic
+
         const locationField = document.getElementById('location-field');
         const locationInput = document.getElementById('location-input');
         const locationDropdown = document.getElementById('location-dropdown');
@@ -931,46 +1036,70 @@
 
         locationInput.addEventListener('click', (e) => {
             e.stopPropagation();
+
             guestField.classList.remove('active');
+            dateField.classList.remove('active');
+
             locationField.classList.add('active');
         });
 
         locationInput.addEventListener('focus', (e) => {
             e.stopPropagation();
+
             guestField.classList.remove('active');
+            dateField.classList.remove('active');
+
             locationField.classList.add('active');
         });
 
         locationInput.addEventListener('input', () => {
+
             const query = locationInput.value.toLowerCase().trim();
+
             locationItems.forEach(item => {
+
                 const value = item.getAttribute('data-value').toLowerCase();
-                if (value.includes(query)) {
-                    item.style.display = 'flex';
-                } else {
-                    item.style.display = 'none';
-                }
+
+                item.style.display = value.includes(query) ? 'flex' : 'none';
+
             });
         });
 
         locationItems.forEach(item => {
+
             item.addEventListener('click', (e) => {
+
                 e.stopPropagation();
+
                 locationInput.value = item.getAttribute('data-value');
+
                 locationField.classList.remove('active');
+
             });
+
         });
+
+        // Guest Dropdown
 
         guestTrigger.addEventListener('click', (e) => {
+
             e.stopPropagation();
+
             locationField.classList.remove('active');
+            dateField.classList.remove('active');
+
             guestField.classList.toggle('active');
+
         });
 
+        // Close dropdowns when clicking outside
+
         document.addEventListener('click', () => {
+
             guestField.classList.remove('active');
             locationField.classList.remove('active');
             dateField.classList.remove('active');
+
         });
 
         document.querySelector('.guest-dropdown').addEventListener('click', (e) => {
@@ -978,263 +1107,512 @@
         });
 
         // Calendar Logic
+
         const dateField = document.getElementById('date-field');
         const dateTrigger = document.getElementById('date-field-trigger');
         const dateDisplayText = document.getElementById('date-display-text');
+
         const checkinHidden = document.getElementById('checkin-input-hidden');
         const checkoutHidden = document.getElementById('checkout-input-hidden');
+
         const calendarDropdown = document.getElementById('calendar-dropdown');
 
         const today = new Date();
-        today.setHours(0,0,0,0);
+        today.setHours(0, 0, 0, 0);
 
         let checkInDate = null;
         let checkOutDate = null;
         let hoveredDate = null;
 
-        let displayLeftMonth = new Date(2026, 6, 1); // July 2026
+        // Always display the current month and next month
+
+        let displayLeftMonth = new Date(
+            today.getFullYear(),
+            today.getMonth(),
+            1
+        );
 
         function setupCalendar() {
-            // Set inputs initial values
+
             checkinHidden.value = '';
             checkoutHidden.value = '';
+
             updateDateDisplay();
 
-            // Setup tab listeners
+            // Calendar tabs
+
             const calendarTabs = document.querySelectorAll('.calendar-tab');
+
             calendarTabs.forEach(tab => {
+
                 tab.addEventListener('click', (e) => {
+
                     e.stopPropagation();
+
                     calendarTabs.forEach(t => t.classList.remove('active'));
+
                     tab.classList.add('active');
+
                 });
+
             });
 
-            // Prevent dropdown clicks from propagating
+            // Prevent calendar clicks from closing dropdown
+
             calendarDropdown.addEventListener('click', (e) => {
                 e.stopPropagation();
             });
 
-            // Date field trigger click
+            // Open calendar
+
             dateTrigger.addEventListener('click', (e) => {
+
                 e.stopPropagation();
+
                 locationField.classList.remove('active');
                 guestField.classList.remove('active');
+
                 dateField.classList.toggle('active');
-                renderCalendar();
+
+                if (dateField.classList.contains('active')) {
+                    renderCalendar();
+                }
+
             });
 
-            // Month navigation arrow click listeners
+            // Previous month navigation
+
             document.getElementById('prev-month-btn').addEventListener('click', (e) => {
+
                 e.stopPropagation();
-                displayLeftMonth.setMonth(displayLeftMonth.getMonth() - 1);
-                renderCalendar();
+
+                const currentMonth = new Date(
+                    today.getFullYear(),
+                    today.getMonth(),
+                    1
+                );
+
+                const previousMonth = new Date(
+                    displayLeftMonth.getFullYear(),
+                    displayLeftMonth.getMonth() - 1,
+                    1
+                );
+
+                if (previousMonth >= currentMonth) {
+
+                    displayLeftMonth = previousMonth;
+
+                    renderCalendar();
+
+                }
+
             });
+
+            // Next month navigation
 
             document.getElementById('next-month-btn').addEventListener('click', (e) => {
+
                 e.stopPropagation();
-                displayLeftMonth.setMonth(displayLeftMonth.getMonth() + 1);
+
+                displayLeftMonth = new Date(
+                    displayLeftMonth.getFullYear(),
+                    displayLeftMonth.getMonth() + 1,
+                    1
+                );
+
                 renderCalendar();
+
             });
 
-            // Clear highlights when mouse leaves the calendar area
+            // Clear hover highlights
+
             document.querySelector('.months-container').addEventListener('mouseleave', () => {
+
                 if (checkInDate && !checkOutDate) {
+
                     hoveredDate = null;
+
                     updateRangeHighlights();
+
                 }
+
             });
 
             renderCalendar();
+
         }
 
         function renderCalendar() {
-            const leftMonth = displayLeftMonth;
-            const rightMonth = new Date(leftMonth.getFullYear(), leftMonth.getMonth() + 1, 1);
+
+            const leftMonth = new Date(
+                displayLeftMonth.getFullYear(),
+                displayLeftMonth.getMonth(),
+                1
+            );
+
+            const rightMonth = new Date(
+                leftMonth.getFullYear(),
+                leftMonth.getMonth() + 1,
+                1
+            );
 
             renderMonth(leftMonth, 'month-1-title', 'month-1-days');
-            renderMonth(rightMonth, 'month-2-title', 'month-2-days');
-            updateNavButtons();
-        }
 
-        function updateRangeHighlights() {
-            const cells = document.querySelectorAll('.day-cell[data-time]');
-            cells.forEach(cell => {
-                const cellTime = parseInt(cell.dataset.time);
-                if (checkInDate && !checkOutDate && hoveredDate) {
-                    if (cellTime > checkInDate.getTime() && cellTime <= hoveredDate.getTime()) {
-                        cell.classList.add('in-range');
-                    } else {
-                        cell.classList.remove('in-range');
-                    }
-                } else if (checkInDate && checkOutDate) {
-                    if (cellTime > checkInDate.getTime() && cellTime < checkOutDate.getTime()) {
-                        cell.classList.add('in-range');
-                    } else {
-                        cell.classList.remove('in-range');
-                    }
-                } else {
-                    cell.classList.remove('in-range');
-                }
-            });
+            renderMonth(rightMonth, 'month-2-title', 'month-2-days');
+
+            updateNavButtons();
+
         }
 
         function renderMonth(monthDate, titleId, gridId) {
+
             const year = monthDate.getFullYear();
             const month = monthDate.getMonth();
 
             const titleEl = document.getElementById(titleId);
             const gridEl = document.getElementById(gridId);
 
-            const monthName = monthDate.toLocaleString('default', { month: 'long' });
-            titleEl.textContent = `${monthName} ${year}`;
+            titleEl.textContent = monthDate.toLocaleString('default', {
+                month: 'long',
+                year: 'numeric'
+            });
 
             gridEl.innerHTML = '';
 
             const firstDay = new Date(year, month, 1).getDay();
+
             const totalDays = new Date(year, month + 1, 0).getDate();
 
-            // Empty cells before the first day
+            // Empty cells
+
             for (let i = 0; i < firstDay; i++) {
+
                 const cell = document.createElement('div');
+
                 cell.className = 'day-cell empty';
+
                 gridEl.appendChild(cell);
+
             }
 
-            // Days of the month
+            // Generate calendar days
+
             for (let day = 1; day <= totalDays; day++) {
+
                 const date = new Date(year, month, day);
+
                 const cell = document.createElement('div');
+
                 cell.className = 'day-cell';
+
                 cell.textContent = day;
 
                 const time = date.getTime();
-                const todayTime = today.getTime();
+
                 cell.dataset.time = time;
 
-                if (time < todayTime) {
+                // Disable past dates
+
+                if (time < today.getTime()) {
+
                     cell.classList.add('disabled');
-                } else {
-                    if (checkInDate && time === checkInDate.getTime()) {
-                        cell.classList.add('start-date');
-                    } else if (checkOutDate && time === checkOutDate.getTime()) {
-                        cell.classList.add('end-date');
-                    } else if (checkInDate && checkOutDate && time > checkInDate.getTime() && time < checkOutDate.getTime()) {
-                        cell.classList.add('in-range');
-                    } else if (checkInDate && !checkOutDate && hoveredDate && time > checkInDate.getTime() && time <= hoveredDate.getTime()) {
-                        cell.classList.add('in-range');
-                    }
 
-                    cell.addEventListener('click', (e) => {
-                        e.stopPropagation();
-                        if (!checkInDate || checkOutDate) {
-                            checkInDate = date;
-                            checkOutDate = null;
-                            updateRangeHighlights();
-                            updateDateDisplay();
-                            renderCalendar();
-                        } else if (checkInDate && !checkOutDate) {
-                            if (time < checkInDate.getTime()) {
-                                checkInDate = date;
-                                updateRangeHighlights();
-                                updateDateDisplay();
-                                renderCalendar();
-                            } else {
-                                checkOutDate = date;
-                                checkinHidden.value = formatDateForInput(checkInDate);
-                                checkoutHidden.value = formatDateForInput(checkOutDate);
-                                updateDateDisplay();
-                                renderCalendar();
-                                dateField.classList.remove('active');
-                            }
-                        }
-                    });
+                    gridEl.appendChild(cell);
 
-                    cell.addEventListener('mouseenter', () => {
-                        if (checkInDate && !checkOutDate) {
-                            hoveredDate = date;
-                            updateRangeHighlights();
-                        }
-                    });
+                    continue;
+
                 }
 
+                // Check-in highlight
+
+                if (checkInDate && time === checkInDate.getTime()) {
+
+                    cell.classList.add('start-date');
+
+                }
+
+                // Check-out highlight
+
+                if (checkOutDate && time === checkOutDate.getTime()) {
+
+                    cell.classList.add('end-date');
+
+                }
+
+                // Selected range highlight
+
+                if (
+                    checkInDate &&
+                    checkOutDate &&
+                    time > checkInDate.getTime() &&
+                    time < checkOutDate.getTime()
+                ) {
+
+                    cell.classList.add('in-range');
+
+                }
+
+                // Hover preview
+
+                if (
+                    checkInDate &&
+                    !checkOutDate &&
+                    hoveredDate &&
+                    hoveredDate.getTime() > checkInDate.getTime() &&
+                    time > checkInDate.getTime() &&
+                    time <= hoveredDate.getTime()
+                ) {
+
+                    cell.classList.add('in-range');
+
+                }
+
+                // Date selection
+
+                cell.addEventListener('click', (e) => {
+
+                    e.stopPropagation();
+
+                    if (!checkInDate || checkOutDate) {
+
+                        // Select check-in
+
+                        checkInDate = date;
+                        checkOutDate = null;
+                        hoveredDate = null;
+
+                        checkinHidden.value = '';
+                        checkoutHidden.value = '';
+
+                    } else if (time <= checkInDate.getTime()) {
+
+                        // Reset check-in if earlier date is selected
+
+                        checkInDate = date;
+                        checkOutDate = null;
+                        hoveredDate = null;
+
+                        checkinHidden.value = '';
+                        checkoutHidden.value = '';
+
+                    } else {
+
+                        // Select check-out
+
+                        checkOutDate = date;
+                        hoveredDate = null;
+
+                        checkinHidden.value = formatDateForInput(checkInDate);
+
+                        checkoutHidden.value = formatDateForInput(checkOutDate);
+
+                        dateField.classList.remove('active');
+
+                    }
+
+                    updateDateDisplay();
+
+                    renderCalendar();
+
+                });
+
+                // Hover effect
+
+                cell.addEventListener('mouseenter', () => {
+
+                    if (checkInDate && !checkOutDate) {
+
+                        hoveredDate = date;
+
+                        updateRangeHighlights();
+
+                    }
+
+                });
+
                 gridEl.appendChild(cell);
+
             }
+
+        }
+
+        function updateRangeHighlights() {
+
+            const cells = document.querySelectorAll('.day-cell[data-time]');
+
+            cells.forEach(cell => {
+
+                const cellTime = Number(cell.dataset.time);
+
+                cell.classList.remove('in-range');
+
+                if (
+                    checkInDate &&
+                    !checkOutDate &&
+                    hoveredDate &&
+                    hoveredDate.getTime() > checkInDate.getTime() &&
+                    cellTime > checkInDate.getTime() &&
+                    cellTime <= hoveredDate.getTime()
+                ) {
+
+                    cell.classList.add('in-range');
+
+                }
+
+                if (
+                    checkInDate &&
+                    checkOutDate &&
+                    cellTime > checkInDate.getTime() &&
+                    cellTime < checkOutDate.getTime()
+                ) {
+
+                    cell.classList.add('in-range');
+
+                }
+
+            });
+
         }
 
         function updateNavButtons() {
+
             const prevBtn = document.getElementById('prev-month-btn');
-            const currentMonthFirst = new Date(today.getFullYear(), today.getMonth(), 1);
-            if (displayLeftMonth.getTime() <= currentMonthFirst.getTime()) {
-                prevBtn.style.visibility = 'hidden';
-            } else {
-                prevBtn.style.visibility = 'visible';
-            }
+
+            const currentMonth = new Date(
+                today.getFullYear(),
+                today.getMonth(),
+                1
+            );
+
+            // Prevent navigating into past months
+
+            prevBtn.style.visibility =
+                displayLeftMonth <= currentMonth ? 'hidden' : 'visible';
+
         }
 
         function updateDateDisplay() {
+
             if (checkInDate && checkOutDate) {
-                dateDisplayText.textContent = `${formatShortDate(checkInDate)} — ${formatShortDate(checkOutDate)}`;
+
+                dateDisplayText.textContent =
+                    `${formatShortDate(checkInDate)} — ${formatShortDate(checkOutDate)}`;
+
             } else if (checkInDate) {
-                dateDisplayText.textContent = `${formatShortDate(checkInDate)} — Check-out date`;
+
+                dateDisplayText.textContent =
+                    `${formatShortDate(checkInDate)} — Check-out date`;
+
             } else {
-                dateDisplayText.textContent = 'Select check-in and check-out dates';
+
+                dateDisplayText.textContent =
+                    'Select check-in and check-out dates';
+
             }
+
         }
 
         function formatShortDate(date) {
-            const options = { weekday: 'short', month: 'short', day: 'numeric' };
-            return date.toLocaleDateString('en-US', options);
+
+            return date.toLocaleDateString('en-US', {
+                weekday: 'short',
+                month: 'short',
+                day: 'numeric'
+            });
+
         }
 
         function formatDateForInput(date) {
-            if (!date) return '';
+
             const yyyy = date.getFullYear();
+
             const mm = String(date.getMonth() + 1).padStart(2, '0');
+
             const dd = String(date.getDate()).padStart(2, '0');
+
             return `${yyyy}-${mm}-${dd}`;
+
         }
 
+        // Guest Counter Logic
+
         function setupStepper(id, min, max, onChange) {
+
             const display = document.getElementById(id + '-count');
+
             const input = document.getElementById(id + '-input');
+
             const minus = document.getElementById(id + '-minus');
+
             const plus = document.getElementById(id + '-plus');
 
-            display.textContent = input.value; // Sync UI count with input value
+            display.textContent = input.value;
 
             minus.addEventListener('click', () => {
-                let val = parseInt(display.textContent);
+
+                let val = parseInt(display.textContent, 10);
+
                 if (val > min) {
+
                     val--;
+
                     display.textContent = val;
+
                     input.value = val;
+
                     onChange();
+
                 }
+
             });
 
             plus.addEventListener('click', () => {
-                let val = parseInt(display.textContent);
+
+                let val = parseInt(display.textContent, 10);
+
                 if (val < max) {
+
                     val++;
+
                     display.textContent = val;
+
                     input.value = val;
+
                     onChange();
+
                 }
+
             });
+
         }
 
         function updateGuestText() {
-            const adults = document.getElementById('adults-count').textContent;
-            const rooms = document.getElementById('rooms-count').textContent;
-            guestText.textContent = `${adults} adults · ${rooms} room${rooms > 1 ? 's' : ''}`;
+
+            const adults = parseInt(
+                document.getElementById('adults-count').textContent,
+                10
+            );
+
+            const rooms = parseInt(
+                document.getElementById('rooms-count').textContent,
+                10
+            );
+
+            guestText.textContent =
+                `${adults} adults · ${rooms} room${rooms > 1 ? 's' : ''}`;
+
         }
 
+        // Initialize everything
+
         setupStepper('adults', 1, 10, updateGuestText);
+
         setupStepper('rooms', 1, 10, updateGuestText);
 
         setupCalendar();
+
     </script>
+
 </body>
 
 </html>
