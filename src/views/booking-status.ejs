@@ -1,0 +1,247 @@
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Booking Status — StayEase</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined" rel="stylesheet" />
+
+    <style>
+        :root {
+            --primary-blue: #003580;
+            --secondary-blue: #006ce4;
+            --accent-yellow: #febb02;
+            --light-bg: #f5f5f5;
+            --text-main: #1a1a1a;
+            --text-muted: #4d4d4d;
+            --border-color: #e7e7e7;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--light-bg);
+            color: var(--text-main);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background-color: var(--primary-blue);
+            padding: 16px 20px;
+            color: #fff;
+        }
+
+        .navbar {
+            max-width: 1100px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: 700;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .back-btn {
+            color: #fff;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .main-container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px 20px;
+        }
+
+        .status-card {
+            width: 100%;
+            max-width: 420px;
+            background: #fff;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 24px rgba(0, 53, 128, 0.08);
+        }
+
+        .hotel-img {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+            background: #e0e7ef;
+        }
+
+        .hotel-img-placeholder {
+            width: 100%;
+            height: 220px;
+            background: #e0e7ef;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #bbb;
+        }
+
+        .card-body {
+            padding: 24px;
+            text-align: center;
+        }
+
+        .hotel-name {
+            font-size: 22px;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 16px;
+        }
+
+        .status-label {
+            font-size: 13px;
+            color: var(--text-muted);
+            margin-bottom: 8px;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 999px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.4px;
+            text-transform: uppercase;
+        }
+
+        .status-badge.pending {
+            background: #fdecea;
+            color: #d32f2f;
+        }
+
+        .status-badge.confirmed {
+            background: #e6f9ee;
+            color: #1a8a4a;
+        }
+
+        .status-badge.rejected {
+            background: #fdecea;
+            color: #d32f2f;
+        }
+
+        .hint {
+            margin-top: 16px;
+            font-size: 13px;
+            color: var(--text-muted);
+            line-height: 1.5;
+        }
+
+        .email-hint {
+            margin-top: 16px;
+            padding: 12px;
+            background: #f0f6ff;
+            border-radius: 8px;
+            font-size: 13px;
+            color: #003580;
+            line-height: 1.5;
+        }
+
+        .btn-home {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 20px;
+            background: var(--secondary-blue);
+            color: #fff;
+            text-decoration: none;
+            border-radius: 4px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .btn-home:hover {
+            background: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <nav class="navbar">
+            <a href="/" class="logo">StayEase.com</a>
+            <a href="/profile" class="back-btn">
+                <span class="material-icons-outlined">arrow_back</span>
+                My bookings
+            </a>
+        </nav>
+    </header>
+
+    <main class="main-container">
+        <article class="status-card">
+
+            <% const photo = hotel && hotel.photos && hotel.photos.length > 0 ? hotel.photos[0] : null; %>
+            <% const status = (booking && booking.status) ? booking.status : 'Pending'; %>
+            <% const isConfirmed = status.toLowerCase() === 'confirmed'; %>
+            <% const isRejected = status.toLowerCase() === 'rejected'; %>
+            <% const statusClass = isConfirmed ? 'confirmed' : (isRejected ? 'rejected' : 'pending'); %>
+
+            <% if (photo) { %>
+                <img class="hotel-img" src="<%= photo %>" alt="<%= hotel.hotelName %>">
+            <% } else { %>
+                <div class="hotel-img-placeholder">
+                    <i class="material-icons-outlined" style="font-size: 64px;">apartment</i>
+                </div>
+            <% } %>
+
+            <div class="card-body">
+
+                <h1 class="hotel-name"><%= hotel.hotelName %></h1>
+
+                <p class="status-label">Booking status</p>
+
+                <span class="status-badge <%= statusClass %>">
+                    <%= status %>
+                </span>
+
+                <% if (isConfirmed) { %>
+                    <p class="hint">Your booking has been confirmed.</p>
+                <% } else if (isRejected) { %>
+                    <p class="hint">This booking request was rejected by the hotel.</p>
+                <% } else { %>
+                    <p class="hint">
+                        Your request is pending. You will see Confirmed here once the hotel accepts it.
+                    </p>
+                <% } %>
+
+                <!-- This message is always displayed -->
+                <p class="email-hint">
+                    <span class="material-icons-outlined" style="font-size: 17px; vertical-align: middle;">
+                        mail
+                    </span>
+                    Once your booking request is accepted by the hotel, you will receive a confirmation email at your registered email address.
+                </p>
+
+                <a href="/" class="btn-home">Back to home</a>
+
+            </div>
+        </article>
+    </main>
+</body>
+
+</html>

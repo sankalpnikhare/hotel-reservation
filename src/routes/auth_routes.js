@@ -42,6 +42,14 @@ router.post("/register", async (req, res) => {
 
     if (req.session.pendinguser && req.session.otp) {
         if (req.body.otp !== req.session.otp) {
+            
+            
+            if(req.session.attempts > 1){
+                return res.status(429).json({
+                    success:false,
+                    message:"Too Many Attempts."
+                })
+            }
             req.session.destroy();
             return res.status(400).send("Invalid OTP")
 
@@ -98,6 +106,10 @@ router.post("/register", async (req, res) => {
         return res.send("Email already taken");
     }
 
+    
+    // req.session.ip  = req.ip ; 
+    req.session.attempts = 0  ;
+    //---------------------------------------------------------
     const otp = Math.floor(
         1000 + Math.random() * 9000
     ).toString();

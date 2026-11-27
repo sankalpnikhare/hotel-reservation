@@ -393,6 +393,49 @@
             color: #b8860b;
         }
 
+        .status-badge.rejected {
+            background: #fdecea;
+            color: #d32f2f;
+        }
+
+        .booking-actions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .btn-confirm,
+        .btn-reject {
+            border: none;
+            border-radius: 4px;
+            padding: 6px 12px;
+            font-family: inherit;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .btn-confirm {
+            background: #1a8a4a;
+            color: #fff;
+        }
+
+        .btn-confirm:hover {
+            background: #146c3a;
+        }
+
+        .btn-reject {
+            background: #fff;
+            color: #d32f2f;
+            border: 1px solid #d32f2f;
+        }
+
+        .btn-reject:hover {
+            background: #d32f2f;
+            color: #fff;
+        }
+
         .btn-view {
             background: var(--secondary-blue);
             color: #fff;
@@ -652,6 +695,7 @@
                                             <th>Details</th>
                                             <th>Revenue</th>
                                             <th>Status</th>
+                                            <th>Action</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -674,9 +718,25 @@
                                                     ₹<%= booking.revenue.toLocaleString('en-IN') %>
                                                 </td>
                                                 <td>
-                                                    <span class="status-badge <%= (booking.status || 'Confirmed') === 'Confirmed' ? 'confirmed' : 'pending' %>">
-                                                        <%= booking.status || 'Confirmed' %>
+                                                    <% const status = booking.status || 'Pending'; %>
+                                                    <% const statusClass = status.toLowerCase() === 'confirmed' ? 'confirmed' : (status.toLowerCase() === 'rejected' ? 'rejected' : 'pending'); %>
+                                                    <span class="status-badge <%= statusClass %>">
+                                                        <%= status %>
                                                     </span>
+                                                </td>
+                                                <td>
+                                                    <% if (status.toLowerCase() === 'pending') { %>
+                                                        <div class="booking-actions">
+                                                            <button type="button" class="btn-confirm" onclick="updateBookingStatus('<%= booking._id %>', 'Confirmed')">
+                                                                Confirm
+                                                            </button>
+                                                            <button type="button" class="btn-reject" onclick="updateBookingStatus('<%= booking._id %>', 'Rejected')">
+                                                                Reject
+                                                            </button>
+                                                        </div>
+                                                    <% } else { %>
+                                                        —
+                                                    <% } %>
                                                 </td>
                                             </tr>
                                         <% }); %>
@@ -839,6 +899,29 @@
                 });
         }
 
+        function updateBookingStatus(bookingId, status) {
+            var action = status === 'Confirmed' ? 'confirm' : 'reject';
+            if (!confirm('Are you sure you want to ' + action + ' this booking?')) {
+                return;
+            }
+
+            fetch('/booking/' + bookingId + '/status', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ status: status })
+            })
+                .then(function (res) {
+                    if (res.ok) {
+                        window.location.reload();
+                    } else {
+                        alert('Failed to update booking. Please try again.');
+                    }
+                })
+                .catch(function () {
+                    alert('Something went wrong. Please try again.');
+                });
+        }
+
         function openTab(evt, tabName) {
             var i, tabcontent, tablinks;
             tabcontent = document.getElementsByClassName("tab-content");
@@ -857,4 +940,4 @@
     </script>
 </body>
 
-</html>
+</html>
